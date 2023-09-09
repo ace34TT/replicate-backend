@@ -25,20 +25,24 @@ app.get("/", (req: Request, res: Response) => {
   });
 });
 app.post("/api/generate", async (req, res) => {
-  const output: any = await replicate.run(
-    "stability-ai/sdxl:d830ba5dabf8090ec0db6c10fc862c6eb1c929e1a194a5411852d25fd954ac82",
-    {
-      input: {
-        negative_prompt: "letter , words , number , text",
-        width: 512,
-        height: 512,
-        prompt: req.body.prompt,
-        num_inference_steps: 30,
-        scheduler: "K_EULER",
-      },
-    }
-  );
-  return res.status(200).json({ url: output[0] });
+  try {
+    const output: any = await replicate.run(
+      "cjwbw/i2vgen-xl:92fc2f3e3db369db6065bcd3295dac2afbfd612a7cc4abcb45bd4707ccb55b7a",
+      {
+        input: {
+          task: "image-to-video",
+          input_file: req.body.file_url,
+          text: req.body.prompt,
+          high_resolution: false,
+        },
+      }
+    );
+    console.log(output);
+    return res.status(200).json({ url: output });
+  } catch (error: any) {
+    console.log(error);
+    return res.status(500).json({ message: error.message });
+  }
 });
 app.use("/api/images", express.static(path.join(__dirname, "images")));
 
