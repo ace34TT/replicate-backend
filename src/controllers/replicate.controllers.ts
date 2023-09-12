@@ -1,0 +1,50 @@
+import { Request, Response } from "express";
+import { replicate } from "../configs/replicate.config";
+
+export const replicateHandler = async (req: Request, res: Response) => {
+  type Model = `${string}/${string}:${string}`;
+  try {
+    const userModel = req.params.model;
+    let model: Model = `_/_:_`,
+      data;
+    switch (userModel) {
+      case "deforum_stable_diffusion":
+        console.log("deforum_stable_diffusion");
+        model =
+          "deforum/deforum_stable_diffusion:e22e77495f2fb83c34d5fae2ad8ab63c0a87b6b573b6208e1535b23b89ea66d6";
+        data = {
+          animation_prompts: req.body.prompt,
+        };
+        break;
+      case "stable-diffusion-animation":
+        console.log("stable-diffusion-animation");
+        model =
+          "andreasjansson/stable-diffusion-animation:ca1f5e306e5721e19c473e0d094e6603f0456fe759c10715fcd6c1b79242d4a5";
+        data = {
+          prompt_start: req.body.start_prompt,
+          prompt_end: req.body.end_prompt,
+        };
+        break;
+      case "stable-diffusion-dance":
+        console.log("stable-diffusion-dance");
+        (model =
+          "pollinations/stable-diffusion-dance:dfb636aa9c04fe5b7d9897e6159ef88e3ecb3e1eb274c3f072dca7b495823280"),
+          (data = {
+            prompts: req.body.prompts,
+          });
+        break;
+      default:
+        break;
+    }
+
+    const output: any = await replicate.run(model, {
+      input: { data },
+    });
+
+    console.log(output);
+    return res.status(200).json({ url: output });
+  } catch (error: any) {
+    console.log(error);
+    return res.status(500).json({ message: error.message });
+  }
+};
