@@ -17,34 +17,45 @@ export const replicateHandler = async (req: Request, res: Response) => {
         };
         break;
       case "stable-diffusion-animation":
-        console.log("stable-diffusion-animation");
         model =
           "andreasjansson/stable-diffusion-animation:ca1f5e306e5721e19c473e0d094e6603f0456fe759c10715fcd6c1b79242d4a5";
         data = {
           prompt_start: req.body.start_prompt,
           prompt_end: req.body.end_prompt,
+          output_format: "mp4",
         };
+        console.log("stable-diffusion-animation", data);
         break;
       case "stable-diffusion-dance":
         console.log("stable-diffusion-dance");
-        (model =
-          "pollinations/stable-diffusion-dance:dfb636aa9c04fe5b7d9897e6159ef88e3ecb3e1eb274c3f072dca7b495823280"),
-          (data = {
-            prompts: req.body.prompts,
-          });
+        model =
+          "pollinations/stable-diffusion-dance:dfb636aa9c04fe5b7d9897e6159ef88e3ecb3e1eb274c3f072dca7b495823280";
+        data = {
+          prompts: req.body.prompts,
+        };
+        break;
+      case "i2vgen-xl":
+        console.log("i2vgen-xl");
+        console.log(req.body.file_url);
+        model =
+          "cjwbw/i2vgen-xl:92fc2f3e3db369db6065bcd3295dac2afbfd612a7cc4abcb45bd4707ccb55b7a";
+        data = {
+          task: "image-to-video",
+          input_file: req.body.file_url,
+          text: req.body.prompt,
+          high_resolution: false,
+        };
         break;
       default:
         break;
     }
-
     const output: any = await replicate.run(model, {
-      input: { data },
+      input: { ...data },
     });
-
     console.log(output);
     return res.status(200).json({ url: output });
   } catch (error: any) {
-    console.log(error);
+    console.log(error.message);
     return res.status(500).json({ message: error.message });
   }
 };
