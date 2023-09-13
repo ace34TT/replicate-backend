@@ -24,7 +24,8 @@ app.get("/", (req: Request, res: Response) => {
     message: "Hello world",
   });
 });
-app.use("/api/video-generator", ReplicateRoutes);
+app.use("/api", ReplicateRoutes);
+// app.use("/api/image-generator", ReplicateRoutes);
 // app.post("/api/generate", async (req, res) => {
 //   try {
 //     const output: any = await replicate.run(

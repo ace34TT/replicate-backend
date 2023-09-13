@@ -59,3 +59,27 @@ export const replicateHandler = async (req: Request, res: Response) => {
     return res.status(500).json({ message: error.message });
   }
 };
+export const imageToImageHandler = async (req: Request, res: Response) => {
+  try {
+    const [prompt, image] = [req.body.prompt, req.body.image];
+    console.log("making image 2 image request");
+
+    const output = await replicate.run(
+      "stability-ai/sdxl:8beff3369e81422112d93b89ca01426147de542cd4684c244b673b105188fe5f",
+      {
+        input: {
+          prompt: prompt,
+          image: image,
+          height: 512,
+          width: 512,
+          num_outputs: 4,
+        },
+      }
+    );
+    console.log(output);
+    return res.status(200).json({ ...output });
+  } catch (error: any) {
+    console.log(error.message);
+    return res.status(500).json({ message: error.message });
+  }
+};
