@@ -61,7 +61,12 @@ export const replicateHandler = async (req: Request, res: Response) => {
 };
 export const imageToImageHandler = async (req: Request, res: Response) => {
   try {
-    const [prompt, image] = [req.body.prompt, req.body.image];
+    const [prompt, image, width, height] = [
+      req.body.prompt,
+      req.body.image,
+      req.body.width,
+      req.body.height,
+    ];
     console.log("making image 2 image request");
 
     const output = await replicate.run(
@@ -70,8 +75,8 @@ export const imageToImageHandler = async (req: Request, res: Response) => {
         input: {
           prompt: prompt,
           image: image,
-          height: 512,
-          width: 512,
+          height: width,
+          width: height,
           num_outputs: 4,
         },
       }
