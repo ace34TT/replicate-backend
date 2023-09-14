@@ -1,5 +1,9 @@
 import { Request, Response } from "express";
 import { replicate } from "../configs/replicate.config";
+import { resizeImage } from "../helpers/image.helper";
+import { deleteFile, uploadFileToFirebase } from "../services/firebase.service";
+import { SDXLPayload } from "../models/input.model";
+import { deleteImage, getFileName } from "../helpers/file.helper";
 
 export const replicateHandler = async (req: Request, res: Response) => {
   type Model = `${string}/${string}:${string}`;
@@ -68,7 +72,6 @@ export const imageToImageHandler = async (req: Request, res: Response) => {
       req.body.height,
     ];
     console.log("making image 2 image request");
-
     const output = await replicate.run(
       "stability-ai/sdxl:8beff3369e81422112d93b89ca01426147de542cd4684c244b673b105188fe5f",
       {
@@ -81,6 +84,43 @@ export const imageToImageHandler = async (req: Request, res: Response) => {
         },
       }
     );
+    console.log(output);
+    return res.status(200).json({ ...output });
+  } catch (error: any) {
+    console.log(error.message);
+    return res.status(500).json({ message: error.message });
+  }
+};
+export const anyToImageHandler = async (req: Request, res: Response) => {
+  const [prompt, image, width, height] = [
+    req.body.prompt,
+    req.file,
+    req.body.width,
+    req.body.height,
+  ];
+  try {
+    const input: SDXLPayload = {
+      prompt: prompt,
+      width: Number(width),
+      height: Number(height),
+      num_outputs: 4,
+    };
+    let resizedFile;
+    if (image) {
+      resizedFile = await resizeImage(
+        image.filename,
+        Number(width),
+        Number(height)
+      );
+      input.image = await uploadFileToFirebase(resizedFile!);
+    }
+    const output = await replicate.run(
+      "stability-ai/sdxl:8beff3369e81422112d93b89ca01426147de542cd4684c244b673b105188fe5f",
+      { input }
+    );
+    image && deleteImage(image?.filename);
+    resizedFile && deleteImage(resizedFile);
+    input.image && deleteFile(getFileName(input.image));
     console.log(output);
     return res.status(200).json({ ...output });
   } catch (error: any) {
