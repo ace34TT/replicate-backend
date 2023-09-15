@@ -5,7 +5,7 @@ import { deleteFile, uploadFileToFirebase } from "../services/firebase.service";
 import { SDXLPayload } from "../models/input.model";
 import { deleteImage, getFileName } from "../helpers/file.helper";
 
-export const replicateHandler = async (req: Request, res: Response) => {
+export const promptToVideoHandler = async (req: Request, res: Response) => {
   type Model = `${string}/${string}:${string}`;
   try {
     const userModel = req.params.model;
@@ -123,6 +123,30 @@ export const anyToImageHandler = async (req: Request, res: Response) => {
     input.image && deleteFile(getFileName(input.image));
     console.log(output);
     return res.status(200).json({ ...output });
+  } catch (error: any) {
+    console.log(error.message);
+    return res.status(500).json({ message: error.message });
+  }
+};
+export const promptToMusicHandler = async (req: Request, res: Response) => {
+  try {
+    const [prompt] = [req.body.prompt];
+    console.log("making music : " + prompt);
+    const output = await replicate.run(
+      "meta/musicgen:7a76a8258b23fae65c5a22debb8841d1d7e816b75c2f24218cd2bd8573787906",
+      {
+        input: {
+          prompt: prompt,
+          temperature: 1,
+          model_version: "large",
+          duration: 15,
+          output_format: "mp3",
+          normalization_strategy: "peak",
+        },
+      }
+    );
+    console.log(output);
+    return res.status(200).json(output);
   } catch (error: any) {
     console.log(error.message);
     return res.status(500).json({ message: error.message });
