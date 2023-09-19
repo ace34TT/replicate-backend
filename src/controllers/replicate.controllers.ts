@@ -152,3 +152,32 @@ export const promptToMusicHandler = async (req: Request, res: Response) => {
     return res.status(500).json({ message: error.message });
   }
 };
+export const promptToVoiceHandler = async (req: Request, res: Response) => {
+  const [text, language, speaker_wav] = [
+    req.body.text,
+    req.body.language,
+    req.body.speaker_wav,
+  ];
+  console.log({
+    text: text,
+    language: language,
+    speaker_wav: speaker_wav,
+  });
+  try {
+    const output = await replicate.run(
+      "sigil-wen/xtts:408deaff0c9ba77846ce43a9b797fa9d08ce1a70830ad74c0774c55fd3aabce5",
+      {
+        input: {
+          text: text,
+          language: language,
+          speaker_wav: speaker_wav,
+        },
+      }
+    );
+    console.log(output);
+    return res.status(200).json(output);
+  } catch (error: any) {
+    console.log(error.message);
+    return res.status(500).json({ message: error.message });
+  }
+};

@@ -4,6 +4,7 @@ import {
   imageToImageHandler,
   promptToMusicHandler,
   promptToVideoHandler,
+  promptToVoiceHandler,
 } from "../controllers/replicate.controllers";
 import upload from "../middlewares/multer.middleware";
 
@@ -18,5 +19,5 @@ router.post(
 );
 
 router.post("/music-generator", promptToMusicHandler);
-
+router.post("/voice-generator", promptToVoiceHandler);
 export { router as ReplicateRoutes };
