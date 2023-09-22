@@ -92,6 +92,7 @@ export const imageToImageHandler = async (req: Request, res: Response) => {
   }
 };
 export const anyToImageHandler = async (req: Request, res: Response) => {
+  console.log("calling any to image");
   const [prompt, image, width, height] = [
     req.body.prompt,
     req.file,
@@ -122,6 +123,7 @@ export const anyToImageHandler = async (req: Request, res: Response) => {
     resizedFile && deleteImage(resizedFile);
     input.image && deleteFile(getFileName(input.image));
     console.log(output);
+    console.log("job done");
     return res.status(200).json({ ...output });
   } catch (error: any) {
     console.log(error.message);
