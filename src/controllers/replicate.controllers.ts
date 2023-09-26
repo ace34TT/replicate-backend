@@ -196,7 +196,7 @@ export const realisticBackground = async (req: Request, res: Response) => {
         },
       }
     );
-    console.log(output);
+    // console.log(output["image"]);
     return res.status(200).json({ ...output });
   } catch (error: any) {
     console.log(error.message);
