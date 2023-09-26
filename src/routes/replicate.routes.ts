@@ -5,6 +5,7 @@ import {
   promptToMusicHandler,
   promptToVideoHandler,
   promptToVoiceHandler,
+  realisticBackground,
 } from "../controllers/replicate.controllers";
 import upload from "../middlewares/multer.middleware";
 
@@ -17,7 +18,7 @@ router.post(
   upload.single("file"),
   anyToImageHandler
 );
-
 router.post("/music-generator", promptToMusicHandler);
 router.post("/voice-generator", promptToVoiceHandler);
+router.post("/realistic-background", realisticBackground);
 export { router as ReplicateRoutes };

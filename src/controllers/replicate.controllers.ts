@@ -183,3 +183,23 @@ export const promptToVoiceHandler = async (req: Request, res: Response) => {
     return res.status(500).json({ message: error.message });
   }
 };
+export const realisticBackground = async (req: Request, res: Response) => {
+  try {
+    const [prompt, image] = [req.body.prompt, req.body.image];
+    console.log(prompt, image);
+    const output = await replicate.run(
+      "wolverinn/realistic-background:f77210f166f419c82faf53e313a8b18b24c2695d58116b4a77a900b2715f595a",
+      {
+        input: {
+          prompt: prompt,
+          image: image,
+        },
+      }
+    );
+    console.log(output);
+    return res.status(200).json({ ...output });
+  } catch (error: any) {
+    console.log(error.message);
+    return res.status(500).json({ message: error.message });
+  }
+};
