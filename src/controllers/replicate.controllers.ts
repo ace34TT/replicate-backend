@@ -80,7 +80,7 @@ export const imageToImageHandler = async (req: Request, res: Response) => {
           image: image,
           height: width,
           width: height,
-          num_outputs: 4,
+          num_outputs: 2,
         },
       }
     );
@@ -104,7 +104,7 @@ export const anyToImageHandler = async (req: Request, res: Response) => {
       prompt: prompt,
       width: Number(width),
       height: Number(height),
-      num_outputs: 4,
+      num_outputs: 2,
     };
     let resizedFile;
     if (image) {
