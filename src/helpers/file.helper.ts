@@ -26,9 +26,9 @@ export const fetchImage = async (prefix: string, url: string) => {
   const writer = fs.createWriteStream(filePath);
   response.data.pipe(writer);
   return new Promise((resolve, reject) => {
-    writer.on("finish", resolve);
+    writer.on("finish", () => resolve(filePath));
     writer.on("error", reject);
-  }).then(() => fileName);
+  });
 };
 export const deleteImage = async (filename: string) => {
   console.log("deleting : " + path.resolve(tempDirectory, filename));
@@ -43,4 +43,7 @@ export const getFileName = (url: string) => {
   const parts = url.split("/");
   const fileName = parts[parts.length - 1];
   return fileName;
+};
+export const getFilePath = async (fileName: string) => {
+  return path.resolve(tempDirectory, fileName);
 };

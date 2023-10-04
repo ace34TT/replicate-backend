@@ -188,7 +188,8 @@ export const realisticBackgroundHandler = async (
   res: Response
 ) => {
   try {
-    const [image] = [req.body.image];
+    const [prompt, image] = [req.body.prompt, req.body.image];
+    console.log(prompt, image);
     const output = await replicate.run(
       "wolverinn/realistic-background:f77210f166f419c82faf53e313a8b18b24c2695d58116b4a77a900b2715f595a",
       {
@@ -206,19 +207,18 @@ export const realisticBackgroundHandler = async (
 };
 export const removeBackgroundHandler = async (req: Request, res: Response) => {
   try {
-    const [prompt, image] = [req.body.prompt, req.body.image];
-    console.log(prompt, image);
+    console.log("remove background");
+    const [image] = [req.body.image];
     const output = await replicate.run(
-      "wolverinn/realistic-background:ce02013b285241316db1554f28b583ef5aaaf4ac4f118dc08c460e634b2e3e6b",
+      "cjwbw/rembg:fb8af171cfa1616ddcf1242c093f9c46bcada5ad4cf6f2fbe8b81b330ec5c003",
       {
         input: {
-          prompt: prompt,
           image: image,
         },
       }
     );
-    // console.log(output["image"]);
-    return res.status(200).json({ ...output });
+    console.log(output);
+    return res.status(200).json({ url: output });
   } catch (error: any) {
     console.log(error.message);
     return res.status(500).json({ message: error.message });
