@@ -194,6 +194,7 @@ export const realisticBackgroundHandler = async (
       "wolverinn/realistic-background:f77210f166f419c82faf53e313a8b18b24c2695d58116b4a77a900b2715f595a",
       {
         input: {
+          prompt: prompt,
           image: image,
         },
       }
