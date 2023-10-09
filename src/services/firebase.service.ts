@@ -3,12 +3,15 @@ import path from "path";
 const tempDirectory = path.resolve(__dirname, "../tmp/");
 import fs from "fs";
 require("dotenv").config();
+// const privateKey = process.env.FIREBASE_PRIVATE_KEY;
+console.log(process.env.FIREBASE_PRIVATE_KEY);
+const { privateKey } = JSON.parse(process.env.FIREBASE_PRIVATE_KEY || "");
 
 admin.initializeApp({
   credential: admin.credential.cert({
     projectId: process.env.FIREBASE_PROJECT_ID,
     clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
-    privateKey: process.env.FIREBASE_PRIVATE_KEY,
+    privateKey,
   }),
   storageBucket: process.env.FIREBSE_STORAGE_BACKET,
 });
