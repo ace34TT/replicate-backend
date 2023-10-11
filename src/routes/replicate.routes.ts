@@ -11,7 +11,7 @@ import {
 import upload from "../middlewares/multer.middleware";
 
 const router = express.Router();
-
+``;
 router.post("/video-generator/:model", promptToVideoHandler);
 router.post("/image-generator/image2image", imageToImageHandler);
 router.post(

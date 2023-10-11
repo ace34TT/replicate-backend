@@ -80,7 +80,7 @@ export const imageToImageHandler = async (req: Request, res: Response) => {
           image: image,
           height: width,
           width: height,
-          num_outputs: 2,
+          num_outputs: req.body.outputs || 2,
         },
       }
     );
