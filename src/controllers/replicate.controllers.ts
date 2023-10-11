@@ -225,3 +225,23 @@ export const removeBackgroundHandler = async (req: Request, res: Response) => {
     return res.status(500).json({ message: error.message });
   }
 };
+
+export const upscaleHandler = async (req: Request, res: Response) => {
+  try {
+    console.log("processing");
+    const [image] = [req.body.image];
+    const output = await replicate.run(
+      "daanelson/some-upscalers:3078c9717f1b83d4fa86890b769f047695daff189028b96dcf517747853a48b0",
+      {
+        input: {
+          image: image,
+        },
+      }
+    );
+    console.log(output);
+    return res.status(200).json({ url: output });
+  } catch (error: any) {
+    console.log(error.message);
+    return res.status(500).json({ message: error.message });
+  }
+};
