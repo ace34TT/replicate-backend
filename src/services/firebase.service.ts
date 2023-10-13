@@ -15,6 +15,7 @@ admin.initializeApp({
   }),
   storageBucket: process.env.FIREBSE_STORAGE_BACKET,
 });
+
 export const uploadFileToFirebase = async (filename: string) => {
   const bucket = admin.storage().bucket();
   await bucket.upload(path.resolve(tempDirectory + "/" + filename), {

@@ -225,7 +225,6 @@ export const removeBackgroundHandler = async (req: Request, res: Response) => {
     return res.status(500).json({ message: error.message });
   }
 };
-
 export const upscaleHandler = async (req: Request, res: Response) => {
   try {
     console.log("processing");
@@ -235,6 +234,26 @@ export const upscaleHandler = async (req: Request, res: Response) => {
       {
         input: {
           image: image,
+        },
+      }
+    );
+    console.log(output);
+    return res.status(200).json({ url: output });
+  } catch (error: any) {
+    console.log(error.message);
+    return res.status(500).json({ message: error.message });
+  }
+};
+export const realEsrganHandler = async (req: Request, res: Response) => {
+  try {
+    console.log("processing");
+    const [image, scale] = [req.body.image, req.body.scale];
+    const output = await replicate.run(
+      "nightmareai/real-esrgan:42fed1c4974146d4d2414e2be2c5277c7fcf05fcc3a73abf41610695738c1d7b",
+      {
+        input: {
+          image: image,
+          scale: scale,
         },
       }
     );

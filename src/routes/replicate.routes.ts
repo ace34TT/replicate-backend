@@ -5,6 +5,7 @@ import {
   promptToMusicHandler,
   promptToVideoHandler,
   promptToVoiceHandler,
+  realEsrganHandler,
   realisticBackgroundHandler,
   removeBackgroundHandler,
   upscaleHandler,
@@ -25,4 +26,5 @@ router.post("/voice-generator", promptToVoiceHandler);
 router.post("/realistic-background", realisticBackgroundHandler);
 router.post("/remove-background", removeBackgroundHandler);
 router.post("/upscale", upscaleHandler);
+router.post("/real-esrgan", realEsrganHandler);
 export { router as ReplicateRoutes };
