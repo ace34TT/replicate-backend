@@ -5,6 +5,8 @@ import { ReplicateRoutes } from "./routes/replicate.routes";
 import cors from "cors";
 import { fetchImage } from "./helpers/file.helper";
 import fs from "fs";
+import upload from "./middlewares/multer.middleware";
+import { mp3ToWave } from "./helpers/audio.helper";
 const app = express();
 
 app.use(cors());
@@ -16,6 +18,19 @@ app.get("/", (req: Request, res: Response) => {
   });
 });
 app.use("/api", ReplicateRoutes);
+
+app.post(
+  "/api/mp3_to_wav",
+  upload.single("file"),
+  async (req: Request, res: Response) => {
+    const url = await mp3ToWave(req.file!.filename);
+    console.log(url);
+    return res.status(200).json({
+      url: url,
+    });
+  }
+);
+
 app.get("/download", async (req: Request, res: Response) => {
   try {
     console.log("downloading");
