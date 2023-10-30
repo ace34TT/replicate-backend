@@ -1,6 +1,7 @@
 import express from "express";
 import {
   anyToImageHandler,
+  image2videoHandler,
   imageToImageHandler,
   promptToMusicHandler,
   promptToVideoHandler,
@@ -9,12 +10,16 @@ import {
   realisticBackgroundHandler,
   removeBackgroundHandler,
   upscaleHandler,
+  video2VideoHandler,
 } from "../controllers/replicate.controllers";
 import upload from "../middlewares/multer.middleware";
 
 const router = express.Router();
-``;
+
+router.post("/video-generator/image2video", image2videoHandler);
+router.post("/video-generator/video2video", video2VideoHandler);
 router.post("/video-generator/:model", promptToVideoHandler);
+//
 router.post("/image-generator/image2image", imageToImageHandler);
 router.post(
   "/image-generator/any2image",

@@ -264,3 +264,54 @@ export const realEsrganHandler = async (req: Request, res: Response) => {
     return res.status(500).json({ message: error.message });
   }
 };
+
+export const image2videoHandler = async (req: Request, res: Response) => {
+  try {
+    const [startPrompt, endPrompt, image] = [
+      req.body.startPrompt,
+      req.body.endPrompt,
+      req.body.image,
+    ];
+    const output = await replicate.run(
+      "fofr/lcm-animation:643766d26270d14a9a2232d8cc4ac503f367b867e9d6e9f8d6949c7d2ed5d52f",
+      {
+        input: {
+          start_prompt: startPrompt,
+          end_prompt: endPrompt,
+          image: image,
+        },
+      }
+    );
+    console.log(output);
+    return res.status(200).json({ url: output });
+  } catch (error: any) {
+    console.log(error.message);
+    return res.status(500).json({ message: error.message });
+  }
+};
+export const video2VideoHandler = async (req: Request, res: Response) => {
+  try {
+    const [prompt, fps, video] = [
+      req.body.prompt,
+      req.body.fps,
+      req.body.video,
+    ];
+    console.log("making video to video rq");
+
+    const output = await replicate.run(
+      "fofr/lcm-video2video:4a9c4bf075ec55d1194c12c26b837724cb7181fcf13cfb83ce92e7b4b6c283e7",
+      {
+        input: {
+          prompt: prompt,
+          video: video,
+          fps: Number(fps),
+        },
+      }
+    );
+    console.log(output);
+    return res.status(200).json({ url: output });
+  } catch (error: any) {
+    console.log(error.message);
+    return res.status(500).json({ message: error.message });
+  }
+};
