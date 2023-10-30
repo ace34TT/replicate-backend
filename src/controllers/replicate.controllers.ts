@@ -297,6 +297,7 @@ export const video2VideoHandler = async (req: Request, res: Response) => {
       req.body.video,
     ];
     console.log("making video to video rq");
+    console.log(prompt);
 
     const output = await replicate.run(
       "fofr/lcm-video2video:4a9c4bf075ec55d1194c12c26b837724cb7181fcf13cfb83ce92e7b4b6c283e7",
