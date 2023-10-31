@@ -116,6 +116,7 @@ export const anyToImageHandler = async (req: Request, res: Response) => {
       );
       input.image = await uploadFileToFirebase(resizedFile!);
       input.prompt_strength = Number(req.body.prompt_strength) || 0.8;
+      input.num_inference_steps = 30;
     }
     const output = await replicate.run(
       image
