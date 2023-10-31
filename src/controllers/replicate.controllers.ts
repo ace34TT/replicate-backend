@@ -106,7 +106,6 @@ export const anyToImageHandler = async (req: Request, res: Response) => {
       width: Number(width),
       height: Number(height),
       num_outputs: Number(req.body.num_outputs) || 1,
-      prompt_strength: Number(req.body.prompt_strength) || 0.8,
     };
     let resizedFile;
     if (image) {
@@ -116,9 +115,12 @@ export const anyToImageHandler = async (req: Request, res: Response) => {
         Number(height)
       );
       input.image = await uploadFileToFirebase(resizedFile!);
+      input.prompt_strength = Number(req.body.prompt_strength) || 0.8;
     }
     const output = await replicate.run(
-      "stability-ai/sdxl:8beff3369e81422112d93b89ca01426147de542cd4684c244b673b105188fe5f",
+      image
+        ? "stability-ai/sdxl:8beff3369e81422112d93b89ca01426147de542cd4684c244b673b105188fe5f"
+        : "luosiallen/latent-consistency-model:553803fd018b3cf875a8bc774c99da9b33f36647badfd88a6eec90d61c5f62fc",
       { input }
     );
     image && deleteImage(image?.filename);

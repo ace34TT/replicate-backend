@@ -4,5 +4,5 @@ export interface SDXLPayload {
   width: number;
   num_outputs: number;
   image?: string;
-  prompt_strength: number;
+  prompt_strength?: number;
 }
