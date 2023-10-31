@@ -98,6 +98,7 @@ export const anyToImageHandler = async (req: Request, res: Response) => {
     req.file,
     req.body.width,
     req.body.height,
+    req.body.promptStrength,
   ];
   try {
     const input: SDXLPayload = {
@@ -105,6 +106,7 @@ export const anyToImageHandler = async (req: Request, res: Response) => {
       width: Number(width),
       height: Number(height),
       num_outputs: Number(req.body.num_outputs) || 1,
+      prompt_strength: Number(req.body.prompt_strength) || 0.8,
     };
     let resizedFile;
     if (image) {
@@ -264,7 +266,6 @@ export const realEsrganHandler = async (req: Request, res: Response) => {
     return res.status(500).json({ message: error.message });
   }
 };
-
 export const image2videoHandler = async (req: Request, res: Response) => {
   try {
     const [startPrompt, endPrompt, image] = [
