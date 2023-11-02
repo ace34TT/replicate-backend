@@ -18,7 +18,6 @@ app.get("/", (req: Request, res: Response) => {
   });
 });
 app.use("/api", ReplicateRoutes);
-
 app.post(
   "/api/mp3_to_wav",
   upload.single("file"),
@@ -30,7 +29,6 @@ app.post(
     });
   }
 );
-
 app.get("/download", async (req: Request, res: Response) => {
   try {
     console.log("downloading");

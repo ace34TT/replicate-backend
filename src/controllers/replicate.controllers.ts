@@ -4,6 +4,7 @@ import { resizeImage } from "../helpers/image.helper";
 import { deleteFile, uploadFileToFirebase } from "../services/firebase.service";
 import { SDXLPayload } from "../models/input.model";
 import { deleteImage, getFileName } from "../helpers/file.helper";
+import io from "../index";
 
 export const promptToVideoHandler = async (req: Request, res: Response) => {
   type Model = `${string}/${string}:${string}`;
@@ -93,15 +94,15 @@ export const imageToImageHandler = async (req: Request, res: Response) => {
 };
 export const anyToImageHandler = async (req: Request, res: Response) => {
   console.log("calling any to image");
-  const [prompt, image, image_url, width, height] = [
+  const [prompt, image, image_url, width, height, numInferenceSteps] = [
     req.body.prompt,
     req.file,
     req.body.image,
     req.body.width,
     req.body.height,
-    req.body.promptStrength,
+    req.body.num_inference_steps,
   ];
-  console.log(prompt);
+
   try {
     const input: SDXLPayload = {
       prompt: prompt,
@@ -110,6 +111,7 @@ export const anyToImageHandler = async (req: Request, res: Response) => {
       num_outputs: Number(req.body.num_outputs) || 1,
     };
     let resizedFile;
+    console.log(width, height);
 
     let model: any =
       "luosiallen/latent-consistency-model:553803fd018b3cf875a8bc774c99da9b33f36647badfd88a6eec90d61c5f62fc";
@@ -124,12 +126,12 @@ export const anyToImageHandler = async (req: Request, res: Response) => {
       );
       input.image = await uploadFileToFirebase(resizedFile!);
       input.prompt_strength = Number(req.body.prompt_strength) || 0.8;
-      input.num_inference_steps = 30;
+      input.num_inference_steps = Number(numInferenceSteps) || 30;
     }
     if (image_url) {
       input.image = image_url;
       input.prompt_strength = Number(req.body.prompt_strength) || 0.8;
-      input.num_inference_steps = 30;
+      input.num_inference_steps = Number(numInferenceSteps) || 30;
     }
     console.log(model);
     const output = await replicate.run(model, { input });
@@ -285,6 +287,12 @@ export const image2videoHandler = async (req: Request, res: Response) => {
       req.body.endPrompt,
       req.body.image,
     ];
+    const socketId = req.query.socketId as string;
+    console.log(socketId);
+    if (!socketId && !io.sockets.sockets.has(socketId))
+      throw new Error("could not extract data from this file");
+    const socket = io.sockets.sockets.get(socketId);
+
     const output = await replicate.run(
       "fofr/lcm-animation:643766d26270d14a9a2232d8cc4ac503f367b867e9d6e9f8d6949c7d2ed5d52f",
       {
@@ -296,6 +304,7 @@ export const image2videoHandler = async (req: Request, res: Response) => {
       }
     );
     console.log(output);
+    socket!.emit("job_done", { url: output });
     return res.status(200).json({ url: output });
   } catch (error: any) {
     console.log(error.message);
