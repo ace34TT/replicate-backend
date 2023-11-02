@@ -93,13 +93,15 @@ export const imageToImageHandler = async (req: Request, res: Response) => {
 };
 export const anyToImageHandler = async (req: Request, res: Response) => {
   console.log("calling any to image");
-  const [prompt, image, width, height] = [
+  const [prompt, image, image_url, width, height] = [
     req.body.prompt,
     req.file,
+    req.body.image,
     req.body.width,
     req.body.height,
     req.body.promptStrength,
   ];
+  console.log(prompt);
   try {
     const input: SDXLPayload = {
       prompt: prompt,
@@ -108,6 +110,12 @@ export const anyToImageHandler = async (req: Request, res: Response) => {
       num_outputs: Number(req.body.num_outputs) || 1,
     };
     let resizedFile;
+
+    let model: any =
+      "luosiallen/latent-consistency-model:553803fd018b3cf875a8bc774c99da9b33f36647badfd88a6eec90d61c5f62fc";
+    if (image || image_url)
+      model =
+        "stability-ai/sdxl:8beff3369e81422112d93b89ca01426147de542cd4684c244b673b105188fe5f";
     if (image) {
       resizedFile = await resizeImage(
         image.filename,
@@ -118,15 +126,16 @@ export const anyToImageHandler = async (req: Request, res: Response) => {
       input.prompt_strength = Number(req.body.prompt_strength) || 0.8;
       input.num_inference_steps = 30;
     }
-    const output = await replicate.run(
-      image
-        ? "stability-ai/sdxl:8beff3369e81422112d93b89ca01426147de542cd4684c244b673b105188fe5f"
-        : "luosiallen/latent-consistency-model:553803fd018b3cf875a8bc774c99da9b33f36647badfd88a6eec90d61c5f62fc",
-      { input }
-    );
+    if (image_url) {
+      input.image = image_url;
+      input.prompt_strength = Number(req.body.prompt_strength) || 0.8;
+      input.num_inference_steps = 30;
+    }
+    console.log(model);
+    const output = await replicate.run(model, { input });
     image && deleteImage(image?.filename);
     resizedFile && deleteImage(resizedFile);
-    input.image && deleteFile(getFileName(input.image));
+    image && input.image && deleteFile(getFileName(input.image));
     console.log(output);
     console.log("job done");
     return res.status(200).json({ ...output });

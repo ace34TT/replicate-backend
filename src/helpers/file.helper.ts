@@ -42,6 +42,7 @@ export const folderGuard = () => {
 export const getFileName = (url: string) => {
   const parts = url.split("/");
   const fileName = parts[parts.length - 1];
+  console.log(fileName);
   return fileName;
 };
 export const getFilePath = async (fileName: string) => {
