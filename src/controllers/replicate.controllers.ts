@@ -1,6 +1,6 @@
+import { resizeImage } from "./../helpers/image.helper";
 import { Request, Response } from "express";
 import { replicate } from "../configs/replicate.config";
-import { resizeImage } from "../helpers/image.helper";
 import { deleteFile, uploadFileToFirebase } from "../services/firebase.service";
 import { SDXLPayload } from "../models/input.model";
 import { deleteImage, getFileName } from "../helpers/file.helper";
@@ -146,6 +146,68 @@ export const anyToImageHandler = async (req: Request, res: Response) => {
     return res.status(500).json({ message: error.message });
   }
 };
+export const essd_1b_img2imgHandler = async (req: Request, res: Response) => {
+  const [
+    prompt,
+    image,
+    image_url,
+    width,
+    height,
+    numInferenceSteps,
+    promptStrength,
+  ] = [
+    req.body.prompt,
+    req.file,
+    req.body.image,
+    req.body.width,
+    req.body.height,
+    req.body.num_inference_steps,
+    req.body.prompt_strength,
+  ];
+  try {
+    const input = {
+      image: "",
+      prompt: prompt,
+      strength: Number(promptStrength) || 0.65,
+      scheduler: "K_EULER",
+      guidance_scale: 8,
+      num_inference_steps: Number(numInferenceSteps) || 30,
+    };
+    let resizedFile, generated_url;
+    if (image) {
+      resizedFile = await resizeImage(
+        image!.filename,
+        Number(width),
+        Number(height)
+      );
+      generated_url = await uploadFileToFirebase(resizedFile!);
+      input.image = generated_url;
+    }
+    if (image_url) {
+      input.image = image_url;
+    }
+    console.log("making the request ");
+
+    const output = await replicate.run(
+      "lucataco/ssd-1b-img2img:8d758408398a909fb7696c2a04ea044158de351b6b87cf0934d1f11bc3e4ad39",
+      {
+        input,
+      }
+    );
+    console.log("request done ");
+
+    image && deleteImage(image?.filename);
+    resizedFile && deleteImage(resizedFile);
+    image && input.image && deleteFile(getFileName(input.image));
+    console.log(output);
+
+    return res.status(200).json({ url: output });
+  } catch (error: any) {
+    console.log(error.message);
+    return res.status(500).json({ message: error.message });
+  }
+};
+
 export const promptToMusicHandler = async (req: Request, res: Response) => {
   try {
     const [prompt] = [req.body.prompt];

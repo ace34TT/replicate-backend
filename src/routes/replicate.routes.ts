@@ -1,6 +1,7 @@
 import express from "express";
 import {
   anyToImageHandler,
+  essd_1b_img2imgHandler,
   image2videoHandler,
   imageToImageHandler,
   promptToMusicHandler,
@@ -26,9 +27,18 @@ router.post(
   upload.single("file"),
   anyToImageHandler
 );
+router.post(
+  "/image-generator/essd_1b_img2img",
+  upload.single("file"),
+  essd_1b_img2imgHandler
+);
+//
 router.post("/music-generator", promptToMusicHandler);
+//
 router.post("/voice-generator", promptToVoiceHandler);
+//
 router.post("/realistic-background", realisticBackgroundHandler);
+//
 router.post("/remove-background", removeBackgroundHandler);
 router.post("/upscale", upscaleHandler);
 router.post("/real-esrgan", realEsrganHandler);
