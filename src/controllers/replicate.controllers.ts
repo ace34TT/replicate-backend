@@ -10,6 +10,11 @@ export const promptToVideoHandler = async (req: Request, res: Response) => {
   type Model = `${string}/${string}:${string}`;
   try {
     const userModel = req.params.model;
+    // const socketId = req.query.socketId as string;
+    // console.log(socketId);
+    // if (!socketId && !io.sockets.sockets.has(socketId))
+    //   throw new Error("could not extract data from this file");
+    // const socket = io.sockets.sockets.get(socketId);
     let model: Model = `_/_:_`,
       data;
     switch (userModel) {
@@ -58,6 +63,7 @@ export const promptToVideoHandler = async (req: Request, res: Response) => {
       input: { ...data },
     });
     console.log(output);
+    // socket!.emit("job_done", { url: output });
     return res.status(200).json({ url: output });
   } catch (error: any) {
     console.log(error.message);
@@ -195,7 +201,6 @@ export const essd_1b_img2imgHandler = async (req: Request, res: Response) => {
       }
     );
     console.log("request done ");
-
     image && deleteImage(image?.filename);
     resizedFile && deleteImage(resizedFile);
     image && input.image && deleteFile(getFileName(input.image));
@@ -274,10 +279,11 @@ export const realisticBackgroundHandler = async (
         input: {
           prompt: prompt,
           image: image,
+          negative_prompt: "human",
         },
       }
     );
-    // console.log(output["image"]);
+    console.log(output);
     return res.status(200).json({ ...output });
   } catch (error: any) {
     console.log(error.message);
