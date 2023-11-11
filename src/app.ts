@@ -3,10 +3,10 @@ import bodyParser from "body-parser";
 import path from "path";
 import { ReplicateRoutes } from "./routes/replicate.routes";
 import cors from "cors";
-import { fetchImage } from "./helpers/file.helper";
+import { fetchImage, fetchSound } from "./helpers/file.helper";
 import fs from "fs";
 import upload from "./middlewares/multer.middleware";
-import { mp3ToWave } from "./helpers/audio.helper";
+import { mp3ToWave, wavToMp3 } from "./helpers/audio.helper";
 const app = express();
 
 app.use(cors());
@@ -29,13 +29,23 @@ app.post(
     });
   }
 );
+app.post("/api/wav_to_mp3", async (req: Request, res: Response) => {
+  try {
+    const url = await wavToMp3(req.body.url);
+    console.log(url);
+
+    return res.status(200).json({ url });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).send("Error fetching image");
+  }
+});
 app.get("/download", async (req: Request, res: Response) => {
   try {
     console.log("downloading");
     const url: string = req.query.url as string;
     const filePath = (await fetchImage("img_", url)) as string;
     console.log(filePath);
-
     // Ensure the file is fully written before sending it
     fs.access(filePath, fs.constants.F_OK, (err) => {
       if (err) {

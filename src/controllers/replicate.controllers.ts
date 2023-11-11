@@ -212,7 +212,6 @@ export const essd_1b_img2imgHandler = async (req: Request, res: Response) => {
     return res.status(500).json({ message: error.message });
   }
 };
-
 export const promptToMusicHandler = async (req: Request, res: Response) => {
   try {
     const [prompt] = [req.body.prompt];
@@ -250,7 +249,7 @@ export const promptToVoiceHandler = async (req: Request, res: Response) => {
   });
   try {
     const output = await replicate.run(
-      "sigil-wen/xtts:408deaff0c9ba77846ce43a9b797fa9d08ce1a70830ad74c0774c55fd3aabce5",
+      "lucataco/xtts-v2:e876df565d4d629da440ce5820d1d2c8c2adb963f52e526efc064911f841f85e",
       {
         input: {
           text: text,

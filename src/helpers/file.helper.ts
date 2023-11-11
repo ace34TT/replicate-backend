@@ -30,6 +30,24 @@ export const fetchImage = async (prefix: string, url: string) => {
     writer.on("error", reject);
   });
 };
+
+export const fetchSound = async (prefix: string, url: string) => {
+  folderGuard();
+  const response = await axios.get(url, { responseType: "stream" });
+  if (response.status !== 200) {
+    throw new Error(
+      `Failed to fetch image: ${response.status} ${response.statusText}`
+    );
+  }
+  const fileName = prefix + "_" + generateRandomString(10) + ".wav";
+  const filePath = path.resolve(tempDirectory, fileName);
+  const writer = fs.createWriteStream(filePath);
+  response.data.pipe(writer);
+  return new Promise((resolve, reject) => {
+    writer.on("finish", () => resolve(filePath));
+    writer.on("error", reject);
+  });
+};
 export const deleteImage = async (filename: string) => {
   console.log("deleting : " + path.resolve(tempDirectory, filename));
   fs.unlinkSync(path.resolve(tempDirectory, filename));
