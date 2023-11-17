@@ -236,6 +236,26 @@ export const promptToMusicHandler = async (req: Request, res: Response) => {
     return res.status(500).json({ message: error.message });
   }
 };
+export const coverMakerHandler = async (req: Request, res: Response) => {
+  try {
+    const [song_input, rvc_model] = [req.body.song_input, req.body.rvc_model];
+    console.log("making cover ");
+    const output = await replicate.run(
+      "zsxkib/realistic-voice-cloning:0a9c7c558af4c0f20667c1bd1260ce32a2879944a0b9e44e1398660c077b1550",
+      {
+        input: {
+          song_input,
+          rvc_model,
+        },
+      }
+    );
+    console.log(output);
+    return res.status(200).json(output);
+  } catch (error: any) {
+    console.log(error.message);
+    return res.status(500).json({ message: error.message });
+  }
+};
 export const promptToVoiceHandler = async (req: Request, res: Response) => {
   const [text, language, speaker_wav] = [
     req.body.text,

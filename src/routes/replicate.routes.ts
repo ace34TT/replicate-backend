@@ -1,6 +1,7 @@
 import express from "express";
 import {
   anyToImageHandler,
+  coverMakerHandler,
   essd_1b_img2imgHandler,
   image2videoHandler,
   imageToImageHandler,
@@ -34,6 +35,7 @@ router.post(
 );
 //
 router.post("/music-generator", promptToMusicHandler);
+router.post("/music-generator/cover", coverMakerHandler);
 //
 router.post("/voice-generator", promptToVoiceHandler);
 //
