@@ -7,6 +7,7 @@ import { fetchImage, fetchSound } from "./helpers/file.helper";
 import fs from "fs";
 import upload from "./middlewares/multer.middleware";
 import { mp3ToWave, wavToMp3 } from "./helpers/audio.helper";
+import { VideoRoutes } from "./routes/video.routes";
 const app = express();
 
 app.use(cors());
@@ -18,6 +19,8 @@ app.get("/", (req: Request, res: Response) => {
   });
 });
 app.use("/api", ReplicateRoutes);
+app.use("/api/video", VideoRoutes);
+
 app.post(
   "/api/mp3_to_wav",
   upload.single("file"),
