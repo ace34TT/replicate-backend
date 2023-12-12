@@ -119,8 +119,10 @@ export const anyToImageHandler = async (req: Request, res: Response) => {
     let resizedFile;
     console.log(width, height);
 
+    // let model: any =
+    //   "luosiallen/latent-consistency-model:553803fd018b3cf875a8bc774c99da9b33f36647badfd88a6eec90d61c5f62fc";
     let model: any =
-      "luosiallen/latent-consistency-model:553803fd018b3cf875a8bc774c99da9b33f36647badfd88a6eec90d61c5f62fc";
+      "stability-ai/sdxl:8beff3369e81422112d93b89ca01426147de542cd4684c244b673b105188fe5f";
     if (image || image_url)
       model =
         "stability-ai/sdxl:8beff3369e81422112d93b89ca01426147de542cd4684c244b673b105188fe5f";
