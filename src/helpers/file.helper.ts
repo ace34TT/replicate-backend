@@ -30,7 +30,6 @@ export const fetchImage = async (prefix: string, url: string) => {
     writer.on("error", reject);
   });
 };
-
 export const fetchSound = async (prefix: string, url: string) => {
   folderGuard();
   const response = await axios.get(url, { responseType: "stream" });
@@ -65,4 +64,15 @@ export const getFileName = (url: string) => {
 };
 export const getFilePath = async (fileName: string) => {
   return path.resolve(tempDirectory, fileName);
+};
+export const convertDataToImage = async (data: any): Promise<string> => {
+  const base64Data = data[2].mask.replace(/^data:image\/\w+;base64,/, "");
+  const filename = generateRandomString(10);
+  const dataBuffer = Buffer.from(base64Data, "base64");
+  await fs.promises.writeFile(
+    path.resolve(tempDirectory, `${filename}.png`),
+    dataBuffer
+  );
+  console.log("The file has been saved!");
+  return filename + ".png";
 };

@@ -44,4 +44,5 @@ router.post("/realistic-background", realisticBackgroundHandler);
 router.post("/remove-background", removeBackgroundHandler);
 router.post("/upscale", upscaleHandler);
 router.post("/real-esrgan", realEsrganHandler);
+//! -------------------------------------------- v2 ----------------------------------------------
 export { router as ReplicateRoutes };
