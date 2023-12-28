@@ -2,7 +2,7 @@ import express from "express";
 import {
   lucataco_sdxl_handler,
   turf_visualizer_handler,
-} from "../controllers/image.controllers";
+} from "../controllers/images.controllers";
 import upload from "../middlewares/multer.middleware";
 
 const router = express.Router();

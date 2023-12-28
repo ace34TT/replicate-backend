@@ -33,7 +33,6 @@ async function convertToWav(track: any, outputName: any) {
       .save(path.resolve(tempDirectory, outputName));
   });
 }
-
 export const wavToMp3 = async (url: string) => {
   // download the file ,
   const file = (await fetchSound("sound_to_convert", url)) as string;
@@ -64,5 +63,14 @@ const convertAudio = async (track: any, outputName: string) => {
         resolve(true);
       })
       .save(path.resolve(tempDirectory, outputName));
+  });
+};
+export const mp3WavToMp4 = async (inputFile: string, outputFile: string) => {
+  return new Promise((resolve, reject) => {
+    ffmpeg(path.resolve(tempDirectory, inputFile))
+      .output(path.resolve(tempDirectory, outputFile))
+      .on("end", resolve)
+      .on("error", reject)
+      .run();
   });
 };

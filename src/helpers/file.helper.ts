@@ -76,3 +76,24 @@ export const convertDataToImage = async (data: any): Promise<string> => {
   console.log("The file has been saved!");
   return filename + ".png";
 };
+export const fetchFile = async (
+  prefix: string,
+  url: string,
+  extension: string
+) => {
+  folderGuard();
+  const response = await axios.get(url, { responseType: "stream" });
+  if (response.status !== 200) {
+    throw new Error(
+      `Failed to fetch image: ${response.status} ${response.statusText}`
+    );
+  }
+  const fileName = prefix + "_" + generateRandomString(10) + "." + extension;
+  const filePath = path.resolve(tempDirectory, fileName);
+  const writer = fs.createWriteStream(filePath);
+  response.data.pipe(writer);
+  return new Promise((resolve, reject) => {
+    writer.on("finish", () => resolve(filePath));
+    writer.on("error", reject);
+  });
+};

@@ -9,6 +9,8 @@ import upload from "./middlewares/multer.middleware";
 import { mp3ToWave, wavToMp3 } from "./helpers/audio.helper";
 import { VideoRoutes } from "./routes/video.routes";
 import { ImageRoutes } from "./routes/image.routes";
+import { VoicesRoutes } from "./routes/voices.routes";
+// import { OAuth2Client } from "./configs/youtube.config";
 const app = express();
 
 app.use(cors());
@@ -19,11 +21,25 @@ app.get("/", (req: Request, res: Response) => {
     message: "Hello world",
   });
 });
+
+// app.get("/auth/google/callback", async (req, res) => {
+//   try {
+//     const { code } = req.query;
+//     const { tokens } = await OAuth2Client.getToken(code as string);
+//     OAuth2Client.setCredentials(tokens);
+//     console.log(tokens);
+//     res.send("Authentication successful");
+//   } catch (error) {
+//     console.error("Error during authentication", error);
+//     res.status(500).send("Error during authentication");
+//   }
+// });
+
 app.use("/api", ReplicateRoutes);
 app.use("/api/video", VideoRoutes);
-
 app.use("/api/images", ImageRoutes);
-
+app.use("/api/voices", VoicesRoutes);
+// !
 app.post(
   "/api/mp3_to_wav",
   upload.single("file"),
