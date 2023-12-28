@@ -61,7 +61,7 @@ export const voiceCloningHandler = async (req: Request, res: Response) => {
       "zsxkib/create-rvc-dataset:c445e27ff34574e92781c15c67db41835cedcdc27a19f527a7dcf37bd0ffe1ff",
       {
         input: {
-          audio_name: "sarah_kays",
+          audio_name: generateRandomString(10),
           youtube_url: mp4Url,
         },
       }
