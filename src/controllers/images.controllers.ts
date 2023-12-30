@@ -30,7 +30,7 @@ export const lucataco_sdxl_handler = async (req: Request, res: Response) => {
 };
 export const turf_visualizer_handler = async (req: Request, res: Response) => {
   try {
-    console.log("processing");
+    console.log("processing turf visualizer");
     const [prompt, image] = [req.body.prompt, req.body.image];
     const filepath: string = (await fetchImage("turf", image)) as string;
     console.log(filepath);
