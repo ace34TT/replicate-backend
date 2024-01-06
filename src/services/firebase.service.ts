@@ -1,43 +1,41 @@
-import * as admin from "firebase-admin";
-import path from "path";
-const tempDirectory = path.resolve(__dirname, "../tmp/");
 import fs from "fs";
-require("dotenv").config();
+import path from "path";
+import { fb_fileServerInstance as admin } from "./../configs/fb.fileServer.config";
+const tempDirectory = path.resolve(__dirname, "../tmp/");
 
-const { privateKey } = JSON.parse(process.env.FIREBASE_PRIVATE_KEY || "");
-
-admin.initializeApp({
-  credential: admin.credential.cert({
-    projectId: process.env.FIREBASE_PROJECT_ID,
-    clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
-    privateKey,
-  }),
-  storageBucket: process.env.FIREBSE_STORAGE_BACKET,
-});
-
-export const uploadFileToFirebase = async (filename: string) => {
-  const bucket = admin.storage().bucket();
+export const uploadFileToFirebase = async (
+  filename: string,
+  folder: string = "files",
+  firebaseInstance = admin
+) => {
+  const bucket = firebaseInstance.storage().bucket();
   await bucket.upload(path.resolve(tempDirectory + "/" + filename), {
-    destination: "images/" + filename,
+    destination: folder + filename,
   });
-  const fileRef = bucket.file("images/" + filename);
+  const fileRef = bucket.file(folder + filename);
   await fileRef.makePublic();
   const publicUrl = `https://storage.googleapis.com/${bucket.name}/${fileRef.name}`;
   return publicUrl;
 };
-export const saveFileFromFirebase = async (filename: string) => {
+export const saveFileFromFirebase = async (
+  filename: string,
+  folder: string = "files"
+) => {
   if (!fs.existsSync(tempDirectory)) {
     fs.mkdirSync(tempDirectory, { recursive: true });
   }
   const bucket = admin.storage().bucket();
-  const file = bucket.file("images/" + filename);
+  const file = bucket.file(folder + filename);
   const destination = path.resolve(tempDirectory + "/" + filename);
   await file.download({ destination });
 };
-export const deleteFile = async (filename: string) => {
+export const deleteFile = async (
+  filename: string,
+  folder: string = "files"
+) => {
   try {
     const bucket = admin.storage().bucket();
-    const file = bucket.file("images/" + filename);
+    const file = bucket.file(folder + filename);
     await file.delete();
   } catch (error: any) {
     console.log(error.message);

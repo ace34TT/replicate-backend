@@ -8,6 +8,7 @@ import {
 } from "../helpers/file.helper";
 import fs from "fs";
 import { uploadFileToFirebase } from "../services/firebase.service";
+import { firebaseProcess } from "../services/turfVisualizer.service";
 export const lucataco_sdxl_handler = async (req: Request, res: Response) => {
   try {
     console.log("processing");
@@ -48,7 +49,7 @@ export const turf_visualizer_handler = async (req: Request, res: Response) => {
     const result = await response.json();
     const maskName = await convertDataToImage(result);
     const maskUrl = await uploadFileToFirebase(maskName);
-    const output: any = await replicate.run(
+    const promise_output_1: any = replicate.run(
       "subscriptions10x/sdxl-inpainting:733bba9bba10b10225a23aae8d62a6d9752f3e89471c2650ec61e50c8c69fb23",
       {
         input: {
@@ -58,10 +59,29 @@ export const turf_visualizer_handler = async (req: Request, res: Response) => {
         },
       }
     );
-    console.log(output[0]);
+    const promise_output_2: any = replicate.run(
+      "subscriptions10x/sdxl-inpainting:733bba9bba10b10225a23aae8d62a6d9752f3e89471c2650ec61e50c8c69fb23",
+      {
+        input: {
+          image,
+          mask_image: maskUrl,
+          prompt,
+        },
+      }
+    );
+    const [output_1, output_2] = await Promise.all([
+      promise_output_1,
+      promise_output_2,
+    ]);
+    // console.log(output_1[0], output_2[0]);
     deleteImage(filepath.split("/").pop()!);
     deleteImage(maskName);
-    return res.status(200).json({ url: output[0] });
+    firebaseProcess(output_1[0], output_2[0], {
+      address: req.body.address,
+      name: req.body.name,
+      phone: req.body.phone,
+    });
+    return res.status(200).json({ url: [output_1[0], output_2[0]] });
   } catch (error: any) {
     console.log(error.message);
     return res.status(500).json({ message: error.message });

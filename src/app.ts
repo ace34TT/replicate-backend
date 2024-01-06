@@ -14,6 +14,7 @@ import { VoicesRoutes } from "./routes/voices.routes";
 const app = express();
 
 app.use(cors());
+
 app.use(bodyParser.json());
 // !
 app.get("/", (req: Request, res: Response) => {
@@ -21,6 +22,12 @@ app.get("/", (req: Request, res: Response) => {
     message: "Hello world",
   });
 });
+
+app.use("/api", ReplicateRoutes);
+app.use("/api/video", VideoRoutes);
+app.use("/api/images", ImageRoutes);
+app.use("/api/voices", VoicesRoutes);
+// !
 
 // app.get("/auth/google/callback", async (req, res) => {
 //   try {
@@ -35,11 +42,6 @@ app.get("/", (req: Request, res: Response) => {
 //   }
 // });
 
-app.use("/api", ReplicateRoutes);
-app.use("/api/video", VideoRoutes);
-app.use("/api/images", ImageRoutes);
-app.use("/api/voices", VoicesRoutes);
-// !
 app.post(
   "/api/mp3_to_wav",
   upload.single("file"),
