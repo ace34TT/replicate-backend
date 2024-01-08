@@ -76,11 +76,7 @@ export const turf_visualizer_handler = async (req: Request, res: Response) => {
     // console.log(output_1[0], output_2[0]);
     deleteImage(filepath.split("/").pop()!);
     deleteImage(maskName);
-    firebaseProcess(output_1[0], output_2[0], {
-      address: req.body.address,
-      name: req.body.name,
-      phone: req.body.phone,
-    });
+    firebaseProcess(output_1[0], output_2[0], req.body.userId);
     return res.status(200).json({ url: [output_1[0], output_2[0]] });
   } catch (error: any) {
     console.log(error.message);

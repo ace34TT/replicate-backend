@@ -7,11 +7,7 @@ const tempDirectory = path.resolve(__dirname, "../tmp/");
 export const firebaseProcess = async (
   image1: string,
   image2: string,
-  user: {
-    address: string;
-    name: string;
-    phone: string;
-  }
+  userId: string
 ) => {
   console.log("processing firebase ");
   const p_filename_1 = fetchImage("turf_", image1);
@@ -25,7 +21,7 @@ export const firebaseProcess = async (
   ]);
   deleteImage(getFileName(file_1 as string));
   deleteImage(getFileName(file_2 as string));
-  insertData({ ...user, images: [output_1, output_2] });
+  insertData({ userId, images: [output_1, output_2] });
   console.log("process done ");
 };
 const uploadFileToFirebase = async (filename: string) => {
