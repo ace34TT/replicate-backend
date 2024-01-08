@@ -21,7 +21,7 @@ export const firebaseProcess = async (
   ]);
   deleteImage(getFileName(file_1 as string));
   deleteImage(getFileName(file_2 as string));
-  insertData({ userId, images: [output_1, output_2] });
+  insertData({ userId, images: [output_1, output_2], created_at: new Date() });
   console.log("process done ");
 };
 const uploadFileToFirebase = async (filename: string) => {
