@@ -64,6 +64,8 @@ app.post("/api/wav_to_mp3", async (req: Request, res: Response) => {
     return res.status(500).send("Error fetching image");
   }
 });
+
+app.post("/api/translate", (req: Request, res: Response) => {});
 app.get("/download", async (req: Request, res: Response) => {
   try {
     console.log("downloading");
