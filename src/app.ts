@@ -10,6 +10,7 @@ import { mp3ToWave, wavToMp3 } from "./helpers/audio.helper";
 import { VideoRoutes } from "./routes/video.routes";
 import { ImageRoutes } from "./routes/image.routes";
 import { VoicesRoutes } from "./routes/voices.routes";
+import { model } from "./configs/gemini.config";
 // import { OAuth2Client } from "./configs/youtube.config";
 const app = express();
 
@@ -65,7 +66,18 @@ app.post("/api/wav_to_mp3", async (req: Request, res: Response) => {
   }
 });
 
-app.post("/api/translate", (req: Request, res: Response) => {});
+app.post("/api/translate", async (req: Request, res: Response) => {
+  try {
+    const result = await model.generateContent(
+      `detect the language of this text :"${req.body.prompt}" , it is not English , translate it in English , if it's not just give the sentence back `
+    );
+    const response = await result.response;
+    const text = response.text();
+    return res.status(200).json({ text });
+  } catch (error) {
+    res.status(500).send("Internal server error");
+  }
+});
 app.get("/download", async (req: Request, res: Response) => {
   try {
     console.log("downloading");
