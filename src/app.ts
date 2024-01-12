@@ -75,6 +75,8 @@ app.post("/api/translate", async (req: Request, res: Response) => {
     const text = response.text();
     return res.status(200).json({ text });
   } catch (error) {
+    console.log(error);
+
     res.status(500).send("Internal server error");
   }
 });
