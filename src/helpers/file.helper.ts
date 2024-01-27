@@ -65,7 +65,11 @@ export const getFilePath = async (fileName: string) => {
   return path.resolve(tempDirectory, fileName);
 };
 export const convertDataToImage = async (data: any): Promise<string> => {
-  const base64Data = data[2].mask.replace(/^data:image\/\w+;base64,/, "");
+  let result = data.filter((item: any) => item.label === "grass-merged");
+  console.log(result);
+
+  if (!result) throw new Error("Could not convert");
+  const base64Data = result[0].mask.replace(/^data:image\/\w+;base64,/, "");
   const filename = generateRandomString(10);
   const dataBuffer = Buffer.from(base64Data, "base64");
   await fs.promises.writeFile(

@@ -47,6 +47,7 @@ export const turf_visualizer_handler = async (req: Request, res: Response) => {
       }
     );
     const result = await response.json();
+
     const maskName = await convertDataToImage(result);
     const maskUrl = await uploadFileToFirebase(maskName);
     const promise_output_1: any = replicate.run(
