@@ -1,6 +1,7 @@
 import axios from "axios";
 import fs from "fs";
 import path from "path";
+import sharp from "sharp";
 const tempDirectory = path.resolve(__dirname, "../tmp/");
 
 export const generateRandomString = (length: number) => {
@@ -99,4 +100,24 @@ export const fetchFile = async (
     writer.on("finish", () => resolve(filePath));
     writer.on("error", reject);
   });
+};
+export const compressImage = async (image: string) => {
+  const outputName = generateRandomString(10) + ".jpg";
+  await new Promise((resolve, reject) => {
+    sharp(path.resolve(tempDirectory, image))
+      .jpeg({ quality: 50 })
+      .toFile(path.resolve(tempDirectory, outputName), (err, info) => {
+        if (err) {
+          console.error(err);
+          reject(err);
+        } else {
+          console.log("Image compressed successfully");
+          resolve(info);
+        }
+      });
+  });
+  return {
+    filename: outputName,
+    filepath: path.resolve(tempDirectory, outputName),
+  };
 };
