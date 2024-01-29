@@ -36,6 +36,7 @@ export const turf_visualizer_handler = async (req: Request, res: Response) => {
     console.log("processing turf visualizer");
     const [prompt, image] = [req.body.prompt, req.file];
     if (!image) {
+      console.log("Invalid data , image is required");
       return res.status(400).send("Invalid data , image is required");
     }
     let filepath = {
@@ -93,6 +94,7 @@ export const turf_visualizer_handler = async (req: Request, res: Response) => {
     firebaseProcess(output_1[0], output_2[0], req.body.userId);
     return res.status(200).json({ url: [output_1[0], output_2[0]] });
   } catch (error: any) {
+    console.log("misy erreur teto");
     console.trace(error);
     return res.status(500).json({ message: error.message });
   }
