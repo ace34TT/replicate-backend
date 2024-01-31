@@ -34,7 +34,7 @@ export const lucataco_sdxl_handler = async (req: Request, res: Response) => {
 export const turf_visualizer_handler = async (req: Request, res: Response) => {
   try {
     console.log("processing turf visualizer");
-    const [prompt, image] = [req.body.prompt, req.file];
+    const [image] = [req.file];
     if (!image) {
       console.log("Invalid data , image is required");
       return res.status(400).send("Invalid data , image is required");
@@ -70,7 +70,8 @@ export const turf_visualizer_handler = async (req: Request, res: Response) => {
         input: {
           image: imageUrl,
           mask_image: maskUrl,
-          prompt,
+          prompt: "Clean green turf covering all the field",
+          n_prompt: "Dirt, dust, sand, water, stones",
         },
       }
     );
@@ -80,7 +81,8 @@ export const turf_visualizer_handler = async (req: Request, res: Response) => {
         input: {
           image: imageUrl,
           mask_image: maskUrl,
-          prompt,
+          prompt: "Clean green turf covering all the field",
+          n_prompt: "Dirt, dust, sand, water, stones",
         },
       }
     );
