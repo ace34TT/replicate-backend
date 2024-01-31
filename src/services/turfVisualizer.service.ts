@@ -27,9 +27,9 @@ export const firebaseProcess = async (
 const uploadFileToFirebase = async (filename: string) => {
   const bucket = firebaseTufVisualizerInstance.storage().bucket();
   await bucket.upload(path.resolve(tempDirectory + "/" + filename), {
-    destination: filename,
+    destination: "results/" + filename,
   });
-  const fileRef = bucket.file(filename);
+  const fileRef = bucket.file("results/" + filename);
   await fileRef.makePublic();
   const publicUrl = `https://storage.googleapis.com/${bucket.name}/${fileRef.name}`;
   return publicUrl;

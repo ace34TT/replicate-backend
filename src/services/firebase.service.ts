@@ -10,9 +10,9 @@ export const uploadFileToFirebase = async (
 ) => {
   const bucket = firebaseInstance.storage().bucket();
   await bucket.upload(path.resolve(tempDirectory, filename), {
-    destination: folder + filename,
+    destination: folder + "/" + filename,
   });
-  const fileRef = bucket.file(folder + filename);
+  const fileRef = bucket.file(folder + "/" + filename);
   await fileRef.makePublic();
   const publicUrl = `https://storage.googleapis.com/${bucket.name}/${fileRef.name}`;
   return publicUrl;
