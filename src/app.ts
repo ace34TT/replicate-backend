@@ -126,5 +126,6 @@ app.put("/api/turf-visualizer/prompt", (req: Request, res: Response) => {
     },
     fb_tufVisualizerInstance
   );
+  return res.status(200).send("process done");
 });
 export { app };
