@@ -11,6 +11,8 @@ import { VideoRoutes } from "./routes/video.routes";
 import { ImageRoutes } from "./routes/image.routes";
 import { VoicesRoutes } from "./routes/voices.routes";
 import { model } from "./configs/gemini.config";
+import { updateDocument } from "./services/firebase.service";
+import { fb_tufVisualizerInstance } from "./configs/fb.turfVisualizer.config";
 // import { OAuth2Client } from "./configs/youtube.config";
 const app = express();
 
@@ -28,6 +30,7 @@ app.use("/api", ReplicateRoutes);
 app.use("/api/video", VideoRoutes);
 app.use("/api/images", ImageRoutes);
 app.use("/api/voices", VoicesRoutes);
+
 // !
 
 // app.get("/auth/google/callback", async (req, res) => {
@@ -108,6 +111,20 @@ app.get("/download", async (req: Request, res: Response) => {
     return res.status(500).send("Error fetching image");
   }
 });
+//
 app.use("/api/images", express.static(path.join(__dirname, "images")));
+//
 
+app.put("/api/turf-visualizer/prompt", (req: Request, res: Response) => {
+  const [prompt, negative_prompt] = [req.body.prompt, req.body.negativePrompt];
+  updateDocument(
+    "prompts",
+    "FHR3HO03svsLcrpHCfWv",
+    {
+      prompt,
+      negative_prompt,
+    },
+    fb_tufVisualizerInstance
+  );
+});
 export { app };

@@ -5,7 +5,7 @@ const { privateKey } = JSON.parse(
   process.env.FIREBASE_TURF_VISUALIZER_PRIVATE_KEY || ""
 );
 
-const firebaseTufVisualizerInstance = admin.initializeApp(
+const fb_tufVisualizerInstance = admin.initializeApp(
   {
     credential: admin.credential.cert({
       projectId: process.env.FIREBASE_TURF_VISUALIZER_PROJECT_ID,
@@ -17,4 +17,4 @@ const firebaseTufVisualizerInstance = admin.initializeApp(
   "turf-visualizer"
 );
 
-export { firebaseTufVisualizerInstance };
+export { fb_tufVisualizerInstance };

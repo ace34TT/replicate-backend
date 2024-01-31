@@ -1,4 +1,4 @@
-import { firebaseTufVisualizerInstance } from "../configs/fb.turfVisualizer.config";
+import { fb_tufVisualizerInstance } from "../configs/fb.turfVisualizer.config";
 import { deleteImage, fetchImage, getFileName } from "../helpers/file.helper";
 
 import path from "path";
@@ -25,7 +25,7 @@ export const firebaseProcess = async (
   console.log("process done ");
 };
 const uploadFileToFirebase = async (filename: string) => {
-  const bucket = firebaseTufVisualizerInstance.storage().bucket();
+  const bucket = fb_tufVisualizerInstance.storage().bucket();
   await bucket.upload(path.resolve(tempDirectory + "/" + filename), {
     destination: "results/" + filename,
   });
@@ -35,8 +35,7 @@ const uploadFileToFirebase = async (filename: string) => {
   return publicUrl;
 };
 const insertData = async (data: any) => {
-  console.log(data);
-  const db = firebaseTufVisualizerInstance.firestore();
+  const db = fb_tufVisualizerInstance.firestore();
   const docRef = db.collection("images").doc();
   await docRef.set(data);
 };

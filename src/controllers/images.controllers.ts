@@ -8,9 +8,13 @@ import {
   getFilePath,
 } from "../helpers/file.helper";
 import fs from "fs";
-import { uploadFileToFirebase } from "../services/firebase.service";
+import {
+  getDocument,
+  uploadFileToFirebase,
+} from "../services/firebase.service";
 import { firebaseProcess } from "../services/turfVisualizer.service";
 import sharp from "sharp";
+import { fb_tufVisualizerInstance } from "../configs/fb.turfVisualizer.config";
 export const lucataco_sdxl_handler = async (req: Request, res: Response) => {
   try {
     console.log("processing");
@@ -64,14 +68,22 @@ export const turf_visualizer_handler = async (req: Request, res: Response) => {
     const imageUrl = await uploadFileToFirebase(image.filename);
     console.log(maskUrl);
     console.log(imageUrl);
+
+    const prompts = await getDocument(
+      "prompts",
+      "FHR3HO03svsLcrpHCfWv",
+      fb_tufVisualizerInstance
+    );
+    console.log(prompts);
     const promise_output_1: any = replicate.run(
       "subscriptions10x/sdxl-inpainting:733bba9bba10b10225a23aae8d62a6d9752f3e89471c2650ec61e50c8c69fb23",
       {
         input: {
           image: imageUrl,
           mask_image: maskUrl,
-          prompt: "Clean green turf covering all the field",
-          n_prompt: "Dirt, dust, sand, water, stones",
+          prompt: prompts.prompt || "Clean green turf covering all the field",
+          n_prompt:
+            prompts.negative_prompt || "Dirt, dust, sand, water, stones",
         },
       }
     );
@@ -81,8 +93,9 @@ export const turf_visualizer_handler = async (req: Request, res: Response) => {
         input: {
           image: imageUrl,
           mask_image: maskUrl,
-          prompt: "Clean green turf covering all the field",
-          n_prompt: "Dirt, dust, sand, water, stones",
+          prompt: prompts.prompt || "Clean green turf covering all the field",
+          n_prompt:
+            prompts.negative_prompt || "Dirt, dust, sand, water, stones",
         },
       }
     );

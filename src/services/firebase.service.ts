@@ -42,3 +42,33 @@ export const deleteFile = async (
     throw new Error(error.message);
   }
 };
+export const getDocument = async (
+  collectionName: any,
+  documentId: any,
+  firebaseInstance: any
+) => {
+  const firestore = firebaseInstance.firestore();
+  const docRef = firestore.collection(collectionName).doc(documentId);
+  // Get the document
+  const doc = await docRef.get();
+
+  if (doc.exists) {
+    return {
+      ...doc.data(),
+    };
+  } else {
+    return {};
+  }
+};
+
+export const updateDocument = async (
+  collectionName: any,
+  documentId: any,
+  data: any,
+  firebaseInstance: any
+) => {
+  const firestore = firebaseInstance.firestore();
+  const docRef = firestore.collection(collectionName).doc(documentId);
+  // Update the document
+  await docRef.update(data);
+};
