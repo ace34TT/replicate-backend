@@ -16,7 +16,7 @@ import { fb_tufVisualizerInstance } from "./configs/fb.turfVisualizer.config";
 // import { OAuth2Client } from "./configs/youtube.config";
 const app = express();
 
-app.use(cors());
+app.use(cors({ origin: true }));
 
 app.use(bodyParser.json());
 // !
