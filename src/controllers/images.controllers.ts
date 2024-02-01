@@ -77,26 +77,26 @@ export const turf_visualizer_handler = async (req: Request, res: Response) => {
     );
     console.log(prompts);
     const promise_output_1: any = replicate.run(
-      "subscriptions10x/sdxl-inpainting:733bba9bba10b10225a23aae8d62a6d9752f3e89471c2650ec61e50c8c69fb23",
+      "stability-ai/sdxl:39ed52f2a78e934b3ba6e2a89f5b1c712de7dfea535525255b1aa35c5565e08b",
       {
         input: {
           image: imageUrl,
-          mask_image: maskUrl,
+          mask: maskUrl,
           prompt: prompts.prompt || "Clean green turf covering all the field",
-          n_prompt:
+          negative_prompt:
             prompts.negative_prompt || "Dirt, dust, sand, water, stones",
           seed: lodash.sample([18668, 59732, 59733, 30418]),
         },
       }
     );
     const promise_output_2: any = replicate.run(
-      "subscriptions10x/sdxl-inpainting:733bba9bba10b10225a23aae8d62a6d9752f3e89471c2650ec61e50c8c69fb23",
+      "stability-ai/sdxl:39ed52f2a78e934b3ba6e2a89f5b1c712de7dfea535525255b1aa35c5565e08b",
       {
         input: {
           image: imageUrl,
-          mask_image: maskUrl,
+          mask: maskUrl,
           prompt: prompts.prompt || "Clean green turf covering all the field",
-          n_prompt:
+          negative_prompt:
             prompts.negative_prompt || "Dirt, dust, sand, water, stones",
           seed: lodash.sample([12480, 12481, 41181]),
         },
