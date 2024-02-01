@@ -53,6 +53,7 @@ export const turf_visualizer_handler = async (req: Request, res: Response) => {
     }
     console.log(filepath);
     const data = fs.readFileSync(filepath.filepath);
+    console.log("generating file done");
     const response = await fetch(
       "https://api-inference.huggingface.co/models/facebook/maskformer-swin-base-coco",
       {
@@ -64,6 +65,7 @@ export const turf_visualizer_handler = async (req: Request, res: Response) => {
       }
     );
     const result = await response.json();
+    console.log("json generated");
     const maskName = await convertDataToImage(result);
     const maskUrl = await uploadFileToFirebase(maskName);
     const imageUrl = await uploadFileToFirebase(image.filename);
