@@ -83,7 +83,7 @@ export const turf_visualizer_handler = async (req: Request, res: Response) => {
           image: imageUrl,
           mask: maskUrl,
           // prompt: prompts.prompt || "Clean green turf covering all the field",
-          prompt: "beautiful fake grass",
+          prompt: "Beautiful fake grass",
           // negative_prompt:
           //   prompts.negative_prompt || "Dirt, dust, sand, water, stones",\
           negative_prompt: "",
@@ -107,7 +107,7 @@ export const turf_visualizer_handler = async (req: Request, res: Response) => {
         input: {
           image: imageUrl,
           mask: maskUrl,
-          prompt: "beautiful fake grass",
+          prompt: "Beautiful fake grass",
           negative_prompt: "",
           width: 1024,
           height: 1024,
