@@ -82,10 +82,22 @@ export const turf_visualizer_handler = async (req: Request, res: Response) => {
         input: {
           image: imageUrl,
           mask: maskUrl,
-          prompt: prompts.prompt || "Clean green turf covering all the field",
-          negative_prompt:
-            prompts.negative_prompt || "Dirt, dust, sand, water, stones",
-          seed: lodash.sample([18668, 59732, 59733, 30418]),
+          // prompt: prompts.prompt || "Clean green turf covering all the field",
+          prompt: "beautiful fake grass",
+          // negative_prompt:
+          //   prompts.negative_prompt || "Dirt, dust, sand, water, stones",\
+          negative_prompt: "",
+          width: 1024,
+          height: 1024,
+          scheduler: "K_EULER",
+          num_inference_steps: 20,
+          guidance_scale: 7.5,
+          prompt_strength: 0.8,
+          // seed: lodash.sample([18668, 59732, 59733, 30418]),
+          seed: 41181,
+          refine: "no_refiner",
+          high_noise_frac: 0.8,
+          lora_scale: 0.6,
         },
       }
     );
@@ -95,10 +107,19 @@ export const turf_visualizer_handler = async (req: Request, res: Response) => {
         input: {
           image: imageUrl,
           mask: maskUrl,
-          prompt: prompts.prompt || "Clean green turf covering all the field",
-          negative_prompt:
-            prompts.negative_prompt || "Dirt, dust, sand, water, stones",
-          seed: lodash.sample([12480, 12481, 41181]),
+          prompt: "beautiful fake grass",
+          negative_prompt: "",
+          width: 1024,
+          height: 1024,
+          num_inference_steps: 20,
+          scheduler: "K_EULER",
+          guidance_scale: 7.5,
+          prompt_strength: 0.8,
+          // seed: lodash.sample([12480, 12481, 41181]),
+          seed: 41181,
+          refine: "no_refiner",
+          high_noise_frac: 0.8,
+          lora_scale: 0.6,
         },
       }
     );
