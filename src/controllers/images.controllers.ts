@@ -83,7 +83,7 @@ export const turf_visualizer_handler = async (req: Request, res: Response) => {
       {
         input: {
           mask: maskUrl,
-          seed: 58309,
+          seed: prompts.prompt || 58309,
           image: imageUrl,
           width: 1024,
           height: 1024,
@@ -100,47 +100,27 @@ export const turf_visualizer_handler = async (req: Request, res: Response) => {
           num_inference_steps: 20,
         },
       }
-      // input: {
-      //   image: imageUrl,
-      //   mask: maskUrl,
-      //   // prompt: prompts.prompt || "Clean green turf covering all the field",
-      //   prompt: "Beautiful fake grass",
-      //   // negative_prompt:
-      //   //   prompts.negative_prompt || "Dirt, dust, sand, water, stones",\
-      //   negative_prompt: "",
-      //   width: 1024,
-      //   height: 1024,
-      //   scheduler: "K_EULER",
-      //   num_inference_steps: 20,
-      //   guidance_scale: 7.5,
-      //   prompt_strength: 0.8,
-      //   // seed: lodash.sample([18668, 59732, 59733, 30418]),
-      //   seed: 59732,
-      //   refine: "no_refiner",
-      //   high_noise_frac: 0.8,
-      //   lora_scale: 0.6,
-      // },
-      // }
     );
     const promise_output_2: any = replicate.run(
       "stability-ai/sdxl:39ed52f2a78e934b3ba6e2a89f5b1c712de7dfea535525255b1aa35c5565e08b",
       {
         input: {
-          image: imageUrl,
           mask: maskUrl,
-          prompt: "Beautiful fake grass",
-          negative_prompt: "",
+          seed: prompts.negative_prompt || 58309,
+          image: imageUrl,
           width: 1024,
           height: 1024,
-          num_inference_steps: 20,
-          scheduler: "K_EULER",
-          guidance_scale: 7.5,
-          prompt_strength: 0.8,
-          // seed: lodash.sample([12480, 12481, 41181]),
-          seed: 59733,
+          prompt: "beautiful fake grass",
           refine: "no_refiner",
-          high_noise_frac: 0.8,
+          scheduler: "K_EULER",
           lora_scale: 0.6,
+          num_outputs: 1,
+          guidance_scale: 7.5,
+          apply_watermark: false,
+          high_noise_frac: 0.8,
+          negative_prompt: "",
+          prompt_strength: 0.8,
+          num_inference_steps: 20,
         },
       }
     );
