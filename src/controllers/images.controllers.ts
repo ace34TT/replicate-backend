@@ -8,6 +8,7 @@ import {
   getFilePath,
 } from "../helpers/file.helper";
 import fs from "fs";
+import lodash from "lodash";
 import {
   getDocument,
   uploadFileToFirebase,
@@ -84,6 +85,7 @@ export const turf_visualizer_handler = async (req: Request, res: Response) => {
           prompt: prompts.prompt || "Clean green turf covering all the field",
           n_prompt:
             prompts.negative_prompt || "Dirt, dust, sand, water, stones",
+          seed: lodash.sample([18668, 59732, 59733, 30418]),
         },
       }
     );
@@ -96,6 +98,7 @@ export const turf_visualizer_handler = async (req: Request, res: Response) => {
           prompt: prompts.prompt || "Clean green turf covering all the field",
           n_prompt:
             prompts.negative_prompt || "Dirt, dust, sand, water, stones",
+          seed: lodash.sample([12480, 12481, 41181]),
         },
       }
     );
