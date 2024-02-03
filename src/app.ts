@@ -113,7 +113,6 @@ app.get("/download", async (req: Request, res: Response) => {
 //
 app.use("/api/images", express.static(path.join(__dirname, "images")));
 //
-
 app.put("/api/turf-visualizer/prompt", (req: Request, res: Response) => {
   const [prompt, negative_prompt] = [req.body.prompt, req.body.negativePrompt];
   updateDocument(
