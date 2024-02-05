@@ -83,11 +83,11 @@ export const turf_visualizer_handler = async (req: Request, res: Response) => {
       {
         input: {
           mask: maskUrl,
-          seed: prompts.seed_1 || 58309,
+          seed: prompts.seed_1 || 34078,
           image: imageUrl,
           width: 1024,
           height: 1024,
-          prompt: prompts.prompt || "beautiful fake grass",
+          prompt: prompts.prompt || "Dark green turf",
           refine: "no_refiner",
           scheduler: "K_EULER",
           lora_scale: 0.6,
@@ -95,9 +95,11 @@ export const turf_visualizer_handler = async (req: Request, res: Response) => {
           guidance_scale: 7.5,
           apply_watermark: false,
           high_noise_frac: 0.8,
-          negative_prompt: prompts.negative_prompt || "",
+          negative_prompt:
+            prompts.negative_prompt ||
+            "worst quality, low quality, illustration, 3d, 2d, painting, cartoons, sketch",
           prompt_strength: 0.8,
-          num_inference_steps: 20,
+          num_inference_steps: 25,
         },
       }
     );
@@ -106,11 +108,11 @@ export const turf_visualizer_handler = async (req: Request, res: Response) => {
       {
         input: {
           mask: maskUrl,
-          seed: prompts.seed_2 || 58309,
+          seed: prompts.seed_2 || 34078,
           image: imageUrl,
           width: 1024,
           height: 1024,
-          prompt: prompts.prompt || "beautiful fake grass",
+          prompt: prompts.prompt || "Dark green turf",
           refine: "no_refiner",
           scheduler: "K_EULER",
           lora_scale: 0.6,
@@ -118,9 +120,11 @@ export const turf_visualizer_handler = async (req: Request, res: Response) => {
           guidance_scale: 7.5,
           apply_watermark: false,
           high_noise_frac: 0.8,
-          negative_prompt: prompts.negative_prompt || "",
+          negative_prompt:
+            prompts.negative_prompt ||
+            "worst quality, low quality, illustration, 3d, 2d, painting, cartoons, sketch",
           prompt_strength: 0.8,
-          num_inference_steps: 20,
+          num_inference_steps: 25,
         },
       }
     );
