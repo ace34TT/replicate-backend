@@ -79,7 +79,7 @@ export const turf_visualizer_handler = async (req: Request, res: Response) => {
     );
     console.log(prompts);
     const promise_output_1: any = replicate.run(
-      "stability-ai/sdxl:39ed52f2a78e934b3ba6e2a89f5b1c712de7dfea535525255b1aa35c5565e08b",
+      "fofr/realvisxl-v3:33279060bbbb8858700eb2146350a98d96ef334fcf817f37eb05915e1534aa1c",
       {
         input: {
           mask: maskUrl,
@@ -104,7 +104,7 @@ export const turf_visualizer_handler = async (req: Request, res: Response) => {
       }
     );
     const promise_output_2: any = replicate.run(
-      "stability-ai/sdxl:39ed52f2a78e934b3ba6e2a89f5b1c712de7dfea535525255b1aa35c5565e08b",
+      "fofr/realvisxl-v3:33279060bbbb8858700eb2146350a98d96ef334fcf817f37eb05915e1534aa1c",
       {
         input: {
           mask: maskUrl,
