@@ -83,8 +83,8 @@ export const turf_visualizer_handler = async (req: Request, res: Response) => {
     );
     const imageUrl = await uploadFileToFirebase(
       image.filename,
-      "data",
-      fb_tufVisualizerInstance
+      "data"
+      // fb_tufVisualizerInstance
     );
     taskTracker.stop();
     console.log(`4-Upload image to firebase :${taskTracker.getTime()}`);
@@ -99,12 +99,14 @@ export const turf_visualizer_handler = async (req: Request, res: Response) => {
       `5-Getting image properties from firebase :${taskTracker.getTime()}`
     );
     taskTracker.start();
-    const promise_output_1: any = replicate.run(
+    let randomNumber = Math.round(Math.random());
+    const output_1: any = await replicate.run(
       "fofr/realvisxl-v3:33279060bbbb8858700eb2146350a98d96ef334fcf817f37eb05915e1534aa1c",
       {
         input: {
           mask: maskUrl,
-          seed: prompts.seed_1 || 34078,
+          seed:
+            (randomNumber === 0 ? prompts.seed_1 : prompts._seed_2) || 34078,
           image: imageUrl,
           width: 1024,
           height: 1024,
@@ -118,48 +120,19 @@ export const turf_visualizer_handler = async (req: Request, res: Response) => {
           high_noise_frac: 0.8,
           negative_prompt:
             prompts.negative_prompt ||
-            "worst quality, low quality, illustration, 3d, 2d, painting, cartoons, sketch",
+            " , worst quality, low quality, illustration, 3d, 2d, painting, cartoons, sketch",
           prompt_strength: 0.8,
-          num_inference_steps: 25, // 20
+          num_inference_steps: 20, // 20
         },
       }
     );
-    const promise_output_2: any = replicate.run(
-      "fofr/realvisxl-v3:33279060bbbb8858700eb2146350a98d96ef334fcf817f37eb05915e1534aa1c",
-      {
-        input: {
-          mask: maskUrl,
-          seed: prompts.seed_2 || 34078,
-          image: imageUrl,
-          width: 1024,
-          height: 1024,
-          prompt: prompts.prompt || "Dark green turf",
-          refine: "no_refiner",
-          scheduler: "K_EULER",
-          lora_scale: 0.6,
-          num_outputs: 1,
-          guidance_scale: 7.5,
-          apply_watermark: false,
-          high_noise_frac: 0.8,
-          negative_prompt:
-            prompts.negative_prompt ||
-            "worst quality, low quality, illustration, 3d, 2d, painting, cartoons, sketch",
-          prompt_strength: 0.8,
-          num_inference_steps: 25,
-        },
-      }
-    );
-    const [output_1, output_2] = await Promise.all([
-      promise_output_1,
-      promise_output_2,
-    ]);
     taskTracker.stop();
-    console.log(output_1[0], output_2[0]);
+    console.log(output_1[0]);
     console.log(`6-Generating images :${taskTracker.getTime()}`);
     deleteImage(filepath.filename);
     deleteImage(maskName);
-    firebaseProcess(output_1[0], output_2[0], req.body.userId);
-    return res.status(200).json({ url: [output_1[0], output_2[0]] });
+    firebaseProcess(output_1[0], req.body.userId);
+    return res.status(200).json({ url: [output_1[0]] });
   } catch (error: any) {
     console.log(error.message);
     // console.trace(error);
