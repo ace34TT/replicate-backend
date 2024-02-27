@@ -69,8 +69,6 @@ export const turf_visualizer_handler = async (req: Request, res: Response) => {
     const maskName = await convertDataToImage(result);
     const maskUrl = await uploadFileToFirebase(maskName);
     const imageUrl = await uploadFileToFirebase(image.filename);
-    console.log(maskUrl);
-    console.log(imageUrl);
 
     const prompts = await getDocument(
       "prompts",
@@ -99,7 +97,7 @@ export const turf_visualizer_handler = async (req: Request, res: Response) => {
             prompts.negative_prompt ||
             "worst quality, low quality, illustration, 3d, 2d, painting, cartoons, sketch",
           prompt_strength: 0.8,
-          num_inference_steps: 25,
+          num_inference_steps: 25, // 20
         },
       }
     );
