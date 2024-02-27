@@ -8,10 +8,19 @@ export const uploadFileToFirebase = async (
   folder: string = "files",
   firebaseInstance = admin
 ) => {
+  console.log("this showing");
   const bucket = firebaseInstance.storage().bucket();
-  await bucket.upload(path.resolve(tempDirectory, filename), {
-    destination: folder + "/" + filename,
-  });
+  console.log("showing");
+  try {
+    await bucket.upload(path.resolve(tempDirectory, filename), {
+      destination: folder + "/" + filename,
+    });
+  } catch (error) {
+    console.log(error);
+  }
+
+  console.log("this not showing");
+
   const fileRef = bucket.file(folder + "/" + filename);
   await fileRef.makePublic();
   const publicUrl = `https://storage.googleapis.com/${bucket.name}/${fileRef.name}`;
@@ -60,7 +69,6 @@ export const getDocument = async (
     return {};
   }
 };
-
 export const updateDocument = async (
   collectionName: any,
   documentId: any,
