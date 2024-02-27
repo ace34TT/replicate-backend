@@ -16,6 +16,7 @@ import {
 import { firebaseProcess } from "../services/turfVisualizer.service";
 import sharp from "sharp";
 import { fb_tufVisualizerInstance } from "../configs/fb.turfVisualizer.config";
+import { ProcessTimer } from "../helpers/process.helper";
 export const lucataco_sdxl_handler = async (req: Request, res: Response) => {
   try {
     console.log("processing");
@@ -38,6 +39,7 @@ export const lucataco_sdxl_handler = async (req: Request, res: Response) => {
 };
 export const turf_visualizer_handler = async (req: Request, res: Response) => {
   try {
+    const taskTracker = new ProcessTimer();
     console.log("processing turf visualizer");
     const [image] = [req.file];
     if (!image) {
@@ -49,11 +51,13 @@ export const turf_visualizer_handler = async (req: Request, res: Response) => {
       filepath: image.path,
     };
     if (image?.size > 1 * 1024 * 1024) {
+      taskTracker.start();
       filepath = await compressImage(image.filename);
+      taskTracker.stop();
+      console.log(`1.1-Compressing file took : ${taskTracker.getTime()}`);
     }
-    console.log(filepath);
+    taskTracker.start();
     const data = fs.readFileSync(filepath.filepath);
-    console.log("generating file done");
     const response = await fetch(
       "https://api-inference.huggingface.co/models/facebook/maskformer-swin-base-coco",
       {
@@ -65,17 +69,36 @@ export const turf_visualizer_handler = async (req: Request, res: Response) => {
       }
     );
     const result = await response.json();
-    console.log("json generated");
+    taskTracker.stop();
+    console.log(`2-Generating mask/json :${taskTracker.getTime()}`);
+    taskTracker.start();
     const maskName = await convertDataToImage(result);
-    const maskUrl = await uploadFileToFirebase(maskName);
-    const imageUrl = await uploadFileToFirebase(image.filename);
-
+    taskTracker.stop();
+    console.log(`3-Creating mask from json :${taskTracker.getTime()}`);
+    taskTracker.start();
+    const maskUrl = await uploadFileToFirebase(
+      maskName,
+      "data",
+      fb_tufVisualizerInstance
+    );
+    const imageUrl = await uploadFileToFirebase(
+      image.filename,
+      "data",
+      fb_tufVisualizerInstance
+    );
+    taskTracker.stop();
+    console.log(`4-Upload image to firebase :${taskTracker.getTime()}`);
+    taskTracker.start();
     const prompts = await getDocument(
       "prompts",
       "FHR3HO03svsLcrpHCfWv",
       fb_tufVisualizerInstance
     );
-    console.log(prompts);
+    taskTracker.stop();
+    console.log(
+      `5-Getting image properties from firebase :${taskTracker.getTime()}`
+    );
+    taskTracker.start();
     const promise_output_1: any = replicate.run(
       "fofr/realvisxl-v3:33279060bbbb8858700eb2146350a98d96ef334fcf817f37eb05915e1534aa1c",
       {
@@ -130,14 +153,16 @@ export const turf_visualizer_handler = async (req: Request, res: Response) => {
       promise_output_1,
       promise_output_2,
     ]);
+    taskTracker.stop();
     console.log(output_1[0], output_2[0]);
-    deleteImage(filepath.filepath.split("/").pop()!);
+    console.log(`6-Generating images :${taskTracker.getTime()}`);
+    deleteImage(filepath.filename);
     deleteImage(maskName);
     firebaseProcess(output_1[0], output_2[0], req.body.userId);
     return res.status(200).json({ url: [output_1[0], output_2[0]] });
   } catch (error: any) {
-    console.log("misy erreur teto");
-    console.trace(error);
+    console.log(error.message);
+    // console.trace(error);
     return res.status(500).json({ message: error.message });
   }
 };
