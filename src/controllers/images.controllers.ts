@@ -69,6 +69,7 @@ export const turf_visualizer_handler = async (req: Request, res: Response) => {
       }
     );
     const result = await response.json();
+    console.log(result);
     taskTracker.stop();
     console.log(`2-Generating mask/json :${taskTracker.getTime()}`);
     taskTracker.start();
