@@ -24,14 +24,11 @@ app.get("/", (req: Request, res: Response) => {
     message: "Hello world",
   });
 });
-
 app.use("/api", ReplicateRoutes);
 app.use("/api/video", VideoRoutes);
 app.use("/api/images", ImageRoutes);
 app.use("/api/voices", VoicesRoutes);
-
 // !
-
 // app.get("/auth/google/callback", async (req, res) => {
 //   try {
 //     const { code } = req.query;
