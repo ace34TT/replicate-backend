@@ -12,6 +12,8 @@ export class ProcessTimer {
   }
 
   public getTime(): number {
-    return this._diffTime[0] * 1e9 + this._diffTime[1] / 1e9;
+    const nanoseconds = this._diffTime[0] * 1e9 + this._diffTime[1];
+    const seconds = nanoseconds / 1e9;
+    return parseFloat(seconds.toFixed(2)); // Round to 2 decimal places
   }
 }
