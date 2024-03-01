@@ -47,7 +47,7 @@ export const turf_visualizer_handler = async (req: Request, res: Response) => {
       return res.status(400).send("Invalid data , image is required");
     }
     let filepath = {
-      filename: image.originalname,
+      filename: image.filename,
       filepath: image.path,
     };
     if (image?.size > 1 * 1024 * 1024) {
