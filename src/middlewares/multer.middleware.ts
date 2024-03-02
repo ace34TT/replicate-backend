@@ -15,18 +15,28 @@ const tempDirectory = path.resolve(__dirname, "../tmp/");
 // });
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    folderGuard();
-    cb(null, tempDirectory);
+    try {
+      folderGuard();
+      cb(null, tempDirectory);
+    } catch (error: any) {
+      console.error(error);
+      cb(error, "");
+    }
   },
   filename: function (req, file, cb) {
-    const taskTracker = new ProcessTimer();
-    taskTracker.start();
-    const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
-    const originalExtension = path.extname(file.originalname);
-    console.log("file extentsion ", originalExtension);
-    cb(null, file.fieldname + "-" + uniqueSuffix + originalExtension);
-    taskTracker.stop();
-    console.log(`1-downloading file took ${taskTracker.getTime()}`);
+    try {
+      const taskTracker = new ProcessTimer();
+      taskTracker.start();
+      const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
+      const originalExtension = path.extname(file.originalname);
+      console.log("file extentsion ", originalExtension);
+      cb(null, file.fieldname + "-" + uniqueSuffix + originalExtension);
+      taskTracker.stop();
+      console.log(`1-downloading file took ${taskTracker.getTime()}`);
+    } catch (error: any) {
+      console.error(error);
+      cb(error, "");
+    }
   },
 });
 
