@@ -18,10 +18,7 @@ const app = express();
 app.use(cors({ origin: true }));
 
 app.use(bodyParser.json());
-// app.use((req, res, next) => {
-//   res.set("Cache-Control", "no-store, no-cache, must-revalidate, private");
-//   next();
-// });
+
 // !
 app.get("/", (req: Request, res: Response) => {
   return res.json({

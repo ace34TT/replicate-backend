@@ -8,5 +8,5 @@ import upload from "../middlewares/multer.middleware";
 const router = express.Router();
 
 router.post("/lucataco_sdxl", lucataco_sdxl_handler);
-router.post("/turf-visualizer", upload.single("file"), turf_visualizer_handler);
+router.post("/turf-visualizer", turf_visualizer_handler);
 export { router as ImageRoutes };
