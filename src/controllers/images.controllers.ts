@@ -4,6 +4,7 @@ import {
   compressImage,
   convertDataToImage,
   deleteImage,
+  fetchFile,
   fetchImage,
   getFilePath,
 } from "../helpers/file.helper";
@@ -11,6 +12,7 @@ import fs from "fs";
 import lodash from "lodash";
 import {
   getDocument,
+  saveFileFromFirebase,
   uploadFileToFirebase,
 } from "../services/firebase.service";
 import { firebaseProcess } from "../services/turfVisualizer.service";
@@ -41,23 +43,31 @@ export const turf_visualizer_handler = async (req: Request, res: Response) => {
   try {
     const taskTracker = new ProcessTimer();
     console.log("processing turf visualizer");
-    const [image] = [req.file];
-    if (!image) {
-      console.log("Invalid data , image is required");
-      return res.status(400).send("Invalid data , image is required");
-    }
-    let filepath = {
-      filename: image.filename,
-      filepath: image.path,
-    };
-    if (image?.size > 1 * 1024 * 1024) {
-      taskTracker.start();
-      filepath = await compressImage(image.filename);
-      taskTracker.stop();
-      console.log(`1.1-Compressing file took : ${taskTracker.getTime()}`);
-    }
+    // const [image] = [req.file];
+    // if (!image) {
+    //   console.log("Invalid data , image is required");
+    //   return res.status(400).send("Invalid data , image is required");
+    // }
+    // let filepath = {
+    //   filename: image.filename,
+    //   filepath: image.path,
+    // };
+
+    await saveFileFromFirebase(
+      req.body.file,
+      "turf-visualizer",
+      fb_tufVisualizerInstance
+    );
+    const filepath = await getFilePath(req.body.file);
+    // if (image?.size > 1 * 1024 * 1024) {
+    //   taskTracker.start();
+    //   filepath = await compressImage(image.filename);
+    //   taskTracker.stop();
+    //   console.log(`1.1-Compressing file took : ${taskTracker.getTime()}`);
+    // }
+
     taskTracker.start();
-    const data = fs.readFileSync(filepath.filepath);
+    const data = fs.readFileSync(filepath);
     const response = await fetch(
       "https://api-inference.huggingface.co/models/facebook/maskformer-swin-base-coco",
       {
@@ -78,7 +88,7 @@ export const turf_visualizer_handler = async (req: Request, res: Response) => {
     console.log(`3-Creating mask from json :${taskTracker.getTime()}`);
     taskTracker.start();
     const maskUrl = await uploadFileToFirebase(maskName, "data");
-    const imageUrl = await uploadFileToFirebase(image.filename, "data");
+    const imageUrl = await uploadFileToFirebase(req.body.file, "data");
     taskTracker.stop();
     console.log(`4-Upload image to firebase :${taskTracker.getTime()}`);
     taskTracker.start();
@@ -122,7 +132,7 @@ export const turf_visualizer_handler = async (req: Request, res: Response) => {
     taskTracker.stop();
     console.log(output_1[0]);
     console.log(`6-Generating images :${taskTracker.getTime()}`);
-    deleteImage(filepath.filename);
+    deleteImage(req.body.file);
     deleteImage(maskName);
     firebaseProcess(output_1[0], req.body.userId);
     return res.status(200).json({ url: [output_1[0]] });

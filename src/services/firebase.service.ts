@@ -28,12 +28,13 @@ export const uploadFileToFirebase = async (
 };
 export const saveFileFromFirebase = async (
   filename: string,
-  folder: string = "files"
+  folder: string = "files",
+  firebaseInstance = admin
 ) => {
   if (!fs.existsSync(tempDirectory)) {
     fs.mkdirSync(tempDirectory, { recursive: true });
   }
-  const bucket = admin.storage().bucket();
+  const bucket = firebaseInstance.storage().bucket();
   const file = bucket.file(folder + filename);
   const destination = path.resolve(tempDirectory + "/" + filename);
   await file.download({ destination });
