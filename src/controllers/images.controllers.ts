@@ -55,7 +55,7 @@ export const turf_visualizer_handler = async (req: Request, res: Response) => {
 
     await saveFileFromFirebase(
       req.body.file,
-      "turf-visualizer",
+      "turf-visualizer/",
       fb_tufVisualizerInstance
     );
     const filepath = await getFilePath(req.body.file);
