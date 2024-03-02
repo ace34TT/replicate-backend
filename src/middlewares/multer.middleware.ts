@@ -19,7 +19,6 @@ const storage = multer.diskStorage({
     cb(null, tempDirectory);
   },
   filename: function (req, file, cb) {
-    // cb(null, file.originalname);
     const taskTracker = new ProcessTimer();
     taskTracker.start();
     const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
