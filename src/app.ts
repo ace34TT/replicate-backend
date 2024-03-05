@@ -69,11 +69,33 @@ app.post("/api/wav_to_mp3", async (req: Request, res: Response) => {
 app.post("/api/translate", async (req: Request, res: Response) => {
   try {
     const result = await model.generateContent(
-      `detect the language of this text :"${req.body.prompt}" , it is not English , translate it in English , if it's not just give the sentence back `
+      `detect the language of this text :"${req.body.prompt}" , it is not English , translate it in English , if it's , just give the sentence back . 
+       Answer as :
+       {
+         "detectedLanguage" : "the prompt language,"
+         "result" : "the translated sentence"
+       }
+      `
     );
     const response = await result.response;
+    let parsedResult = {
+      detectedLanguage: "unknown",
+      result: req.body.prompt,
+    };
     const text = response.text();
-    return res.status(200).json({ text });
+    console.log(text);
+
+    try {
+      parsedResult = JSON.parse(text);
+    } catch (error: any) {
+      console.log(error);
+      parsedResult = {
+        detectedLanguage: "unknown",
+        result: req.body.prompt,
+      };
+    }
+    console.log(parsedResult);
+    return res.status(200).json({ data: parsedResult });
   } catch (error) {
     console.log(error);
 
