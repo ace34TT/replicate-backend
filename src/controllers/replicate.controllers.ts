@@ -300,7 +300,7 @@ export const realisticBackgroundHandler = async (
         input: {
           prompt: prompt,
           image: image,
-          negative_prompt: "human",
+          negative_prompt: "",
         },
       }
     );

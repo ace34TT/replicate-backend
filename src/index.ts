@@ -2,7 +2,7 @@ import expressListRoutes from "express-list-routes";
 import { app } from "./app";
 import http from "http";
 import { Server } from "socket.io";
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 3001;
 
 const server = http.createServer(app);
 
