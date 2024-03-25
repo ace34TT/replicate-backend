@@ -8,9 +8,7 @@ export const uploadFileToFirebase = async (
   folder: string = "files",
   firebaseInstance = admin
 ) => {
-  console.log("this showing");
   const bucket = firebaseInstance.storage().bucket();
-  console.log("showing");
   try {
     await bucket.upload(path.resolve(tempDirectory, filename), {
       destination: folder + "/" + filename,
@@ -18,8 +16,6 @@ export const uploadFileToFirebase = async (
   } catch (error) {
     console.log(error);
   }
-
-  console.log("this not showing");
 
   const fileRef = bucket.file(folder + "/" + filename);
   await fileRef.makePublic();

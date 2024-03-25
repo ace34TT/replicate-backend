@@ -1,8 +1,9 @@
-import { Request, Response } from "express";
+import { json, Request, Response } from "express";
 import { replicate } from "../configs/replicate.config";
 import {
   compressImage,
   convertDataToImage,
+  convertSpecifiedDataToImage,
   deleteImage,
   fetchFile,
   fetchImage,
@@ -140,5 +141,69 @@ export const turf_visualizer_handler = async (req: Request, res: Response) => {
     console.log(error.message);
     // console.trace(error);
     return res.status(500).json({ message: error.message });
+  }
+};
+
+export const generateImageSegmentation = async (
+  req: Request,
+  res: Response
+) => {
+  try {
+    console.log("processing segmentation request");
+    await saveFileFromFirebase(req.body.image, "ai-interior-design/");
+    console.log("file fetched");
+    const filepath = await getFilePath(req.body.image);
+    const data = fs.readFileSync(filepath);
+    const response = await fetch(
+      "https://api-inference.huggingface.co/models/facebook/maskformer-swin-base-coco",
+      {
+        headers: {
+          Authorization: "Bearer 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",
+        },
+        method: "POST",
+        body: data,
+      }
+    );
+    deleteImage(req.body.image);
+    const result = await response.json();
+    console.log(result);
+    return res.status(200).json({
+      result,
+    });
+  } catch (error: any) {
+    console.trace(error);
+    return res.status(500).json({
+      message: error.message,
+    });
+  }
+};
+export const generateImageVariation = async (req: Request, res: Response) => {
+  try {
+    console.log(req.body.mask);
+    console.log(req.body.image);
+    console.log(req.body.prompt);
+
+    console.log("start the new process");
+    const input = {
+      mask: req.body.mask,
+      image: req.body.image,
+      prompt: req.body.prompt,
+      num_inference_steps: 25,
+    };
+
+    const output: any = await replicate.run(
+      "stability-ai/stable-diffusion-inpainting:95b7223104132402a9ae91cc677285bc5eb997834bd2349fa486f53910fd68b3",
+      { input }
+    );
+    console.log(output);
+    console.log(output[0]);
+    return res.status(200).json({
+      url: output[0],
+    });
+  } catch (error: any) {
+    console.trace(error);
+    return res.status(500).json({
+      message: error.message,
+    });
   }
 };

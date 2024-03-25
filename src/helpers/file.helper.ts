@@ -77,6 +77,18 @@ export const convertDataToImage = async (data: any): Promise<string> => {
   );
   return filename + ".png";
 };
+export const convertSpecifiedDataToImage = async (
+  mask: any
+): Promise<string> => {
+  const base64Data = mask.replace(/^data:image\/\w+;base64,/, "");
+  const filename = generateRandomString(10);
+  const dataBuffer = Buffer.from(base64Data, "base64");
+  await fs.promises.writeFile(
+    path.resolve(tempDirectory, `${filename}.png`),
+    dataBuffer
+  );
+  return filename + ".png";
+};
 export const fetchFile = async (
   prefix: string,
   url: string,
