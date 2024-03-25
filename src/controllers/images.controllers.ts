@@ -215,7 +215,7 @@ export const profileGeneratorHandler = async (req: Request, res: Response) => {
       "tencentarc/photomaker:ddfc2b08d209f9fa8c1eca692712918bd449f695dabb4a958da31802a9570fe4",
       {
         input: {
-          prompt: "A photo of person img " + req.body.prompt,
+          prompt: req.body.prompt,
           num_steps: 50,
           style_name: "Photographic (Default)",
           input_image: req.body.image,
