@@ -143,7 +143,6 @@ export const turf_visualizer_handler = async (req: Request, res: Response) => {
     return res.status(500).json({ message: error.message });
   }
 };
-
 export const generateImageSegmentation = async (
   req: Request,
   res: Response
@@ -224,6 +223,39 @@ export const profileGeneratorHandler = async (req: Request, res: Response) => {
           negative_prompt:
             "nsfw, lowres, bad anatomy, bad hands, text, error, missing fingers, extra digit, fewer digits, cropped, worst quality, low quality, normal quality, jpeg artifacts, signature, watermark, username, blurry",
           style_strength_ratio: 30,
+        },
+      }
+    );
+    return res.status(200).json(output);
+  } catch (error: any) {
+    console.trace(error);
+    return res.status(500).json({
+      message: error.message,
+    });
+  }
+};
+export const productVisualiserHandler = async (req: Request, res: Response) => {
+  try {
+    if (!req.body.prompt || !req.body.image) {
+      return res.status(400).json({
+        message: "Prompt is required",
+      });
+    }
+    const output = await replicate.run(
+      "logerzhu/ad-inpaint:b1c17d148455c1fda435ababe9ab1e03bc0d917cc3cf4251916f22c45c83c7df",
+      {
+        input: {
+          pixel: "512 * 512",
+          scale: 3,
+          prompt: req.body.prompt,
+          image_num: 1,
+          image_path: req.body.image,
+          manual_seed: -1,
+          product_size: "0.5 * width",
+          guidance_scale: 7.5,
+          negative_prompt:
+            "illustration, 3d, sepia, painting, cartoons, sketch, (worst quality:2)",
+          num_inference_steps: 20,
         },
       }
     );
