@@ -208,7 +208,6 @@ export const generateImageVariation = async (req: Request, res: Response) => {
 };
 export const ai_packager_handler = async (req: Request, res: Response) => {
   console.log("start processing");
-
   try {
     const output = await replicate.run(
       "lucataco/sdxl-controlnet-depth:5e0a5cda895aa23a1aaa1a9a265220097102448e1b4c42b22a3c6d87c12d41a9",
