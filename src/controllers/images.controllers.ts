@@ -207,3 +207,29 @@ export const generateImageVariation = async (req: Request, res: Response) => {
     });
   }
 };
+export const ai_packager_handler = async (req: Request, res: Response) => {
+  console.log("start processing");
+
+  try {
+    const output = await replicate.run(
+      "lucataco/sdxl-controlnet-depth:5e0a5cda895aa23a1aaa1a9a265220097102448e1b4c42b22a3c6d87c12d41a9",
+      {
+        input: {
+          image:
+            "https://firebasestorage.googleapis.com/v0/b/file-server-f5b74.appspot.com/o/ai-packager%2FIMG_0985.jpeg?alt=media&token=aab142fe-8f54-413f-86cb-3b16b6d24e7a",
+          prompt: req.body.prompt,
+          condition_scale: 0.5,
+          num_inference_steps: 30,
+        },
+      }
+    );
+    console.log(output);
+    // return response
+    return res.status(200).json(output);
+  } catch (error: any) {
+    console.trace(error);
+    return res.status(500).json({
+      message: error.message,
+    });
+  }
+};
