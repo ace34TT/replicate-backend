@@ -371,13 +371,15 @@ export const realEsrganHandler = async (req: Request, res: Response) => {
       "nightmareai/real-esrgan:42fed1c4974146d4d2414e2be2c5277c7fcf05fcc3a73abf41610695738c1d7b",
       {
         input: {
-          image: imageUrl,
+          image: image,
           scale: scale,
         },
       }
     );
     console.log(output);
-    return res.status(200).json({ url: output });
+    return res
+      .status(200)
+      .json({ originalImageUrl: output, framedImageUrl: imageUrl });
   } catch (error: any) {
     console.log(error.message);
     return res.status(500).json({ message: error.message });
