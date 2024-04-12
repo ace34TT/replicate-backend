@@ -31,6 +31,23 @@ export const fetchImage = async (prefix: string, url: string) => {
     writer.on("error", reject);
   });
 };
+export const fetchImage2 = async (prefix: string, url: string) => {
+  folderGuard();
+  const response = await axios.get(url, { responseType: "stream" });
+  if (response.status !== 200) {
+    throw new Error(
+      `Failed to fetch image: ${response.status} ${response.statusText}`
+    );
+  }
+  const fileName = prefix + "_" + generateRandomString(10) + ".png";
+  const filePath = path.resolve(tempDirectory, fileName);
+  const writer = fs.createWriteStream(filePath);
+  response.data.pipe(writer);
+  return new Promise((resolve, reject) => {
+    writer.on("finish", () => resolve(fileName));
+    writer.on("error", reject);
+  });
+};
 export const fetchSound = async (prefix: string, url: string) => {
   folderGuard();
   const response = await axios.get(url, { responseType: "stream" });

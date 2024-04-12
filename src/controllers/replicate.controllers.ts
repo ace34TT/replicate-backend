@@ -1,9 +1,18 @@
-import { resizeImage } from "./../helpers/image.helper";
+import {
+  generateImageForPrintable,
+  resizeImage,
+} from "./../helpers/image.helper";
 import { Request, Response } from "express";
 import { replicate } from "../configs/replicate.config";
 import { deleteFile, uploadFileToFirebase } from "../services/firebase.service";
 import { SDXLPayload } from "../models/input.model";
-import { deleteImage, getFileName } from "../helpers/file.helper";
+import {
+  deleteImage,
+  fetchImage,
+  fetchImage2,
+  generateRandomString,
+  getFileName,
+} from "../helpers/file.helper";
 import io from "../index";
 
 export const promptToVideoHandler = async (req: Request, res: Response) => {
@@ -293,7 +302,7 @@ export const realisticBackgroundHandler = async (
 ) => {
   try {
     const [prompt, image] = [req.body.prompt, req.body.image];
-    console.log(prompt, image);
+
     const output = await replicate.run(
       "wolverinn/realistic-background:f77210f166f419c82faf53e313a8b18b24c2695d58116b4a77a900b2715f595a",
       {
@@ -353,11 +362,15 @@ export const realEsrganHandler = async (req: Request, res: Response) => {
   try {
     console.log("processing");
     const [image, scale] = [req.body.image, req.body.scale];
+    const framedFilename = generateRandomString(10) + ".png";
+    await generateImageForPrintable(image, framedFilename);
+    const imageUrl = await uploadFileToFirebase(framedFilename, "printable");
+    console.log(imageUrl);
     const output = await replicate.run(
       "nightmareai/real-esrgan:42fed1c4974146d4d2414e2be2c5277c7fcf05fcc3a73abf41610695738c1d7b",
       {
         input: {
-          image: image,
+          image: imageUrl,
           scale: scale,
         },
       }

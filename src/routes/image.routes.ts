@@ -21,4 +21,6 @@ router.post("/ai-interior-design/generate", generateImageVariation);
 router.post("/ai-packager", ai_packager_handler);
 router.post("/profile/generate", profileGeneratorHandler);
 router.post("/ai-backdrop", productVisualiserHandler);
+//
+
 export { router as ImageRoutes };
