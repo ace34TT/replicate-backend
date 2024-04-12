@@ -2,6 +2,7 @@ import { folderGuard, generateRandomString } from "./file.helper";
 import sharp from "sharp";
 import path from "path";
 import nodeHtmlToImage from "node-html-to-image";
+import puppeteer from "puppeteer";
 const tempDirectory = path.resolve(__dirname, "../tmp/");
 export const resizeImage = async (
   image: string,
@@ -59,10 +60,24 @@ export const generateImageForPrintable = async (
 </body>
 </html>
 `;
-  await nodeHtmlToImage({
-    output: path.resolve(tempDirectory, outputName),
-    html: html,
-    transparent: true,
-    type: "png",
+  const browser = await puppeteer.launch({
+    args: ["--no-sandbox", "--disable-setuid-sandbox"],
   });
+
+  const page = await browser.newPage();
+  await page.evaluate(() => {
+    // Set the default background of the page to transparent
+    document.body.style.backgroundColor = "transparent";
+  });
+  await page.setContent(html); // Set the HTML content directly
+  await page.screenshot({
+    path: path.resolve(tempDirectory, outputName),
+    type: "png",
+    fullPage: true,
+    omitBackground: true, // This makes the background transparent in the screenshot
+  });
+
+  await browser.close();
+
+  await browser.close();
 };
