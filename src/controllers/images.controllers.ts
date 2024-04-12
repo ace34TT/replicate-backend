@@ -175,8 +175,6 @@ export const generateImageVariation = async (req: Request, res: Response) => {
     console.log(req.body.mask);
     console.log(req.body.image);
     console.log(req.body.prompt);
-
-    console.log("start the new process");
     const input = {
       mask: req.body.mask,
       image: req.body.image,
@@ -255,30 +253,24 @@ export const profileGeneratorHandler = async (req: Request, res: Response) => {
 };
 export const productVisualiserHandler = async (req: Request, res: Response) => {
   try {
-    if (!req.body.prompt || !req.body.image) {
-      return res.status(400).json({
-        message: "Prompt is required",
-      });
-    }
-    const output = await replicate.run(
-      "logerzhu/ad-inpaint:b1c17d148455c1fda435ababe9ab1e03bc0d917cc3cf4251916f22c45c83c7df",
-      {
-        input: {
-          pixel: "512 * 512",
-          scale: 3,
-          prompt: req.body.prompt,
-          image_num: 1,
-          image_path: req.body.image,
-          manual_seed: -1,
-          product_size: "0.5 * width",
-          guidance_scale: 7.5,
-          negative_prompt:
-            "illustration, 3d, sepia, painting, cartoons, sketch, (worst quality:2)",
-          num_inference_steps: 20,
-        },
-      }
+    console.log(req.body.mask);
+    console.log(req.body.image);
+    console.log(req.body.prompt);
+    const input = {
+      mask: req.body.mask,
+      image: req.body.image,
+      prompt: req.body.prompt,
+      num_inference_steps: 25,
+    };
+    const output: any = await replicate.run(
+      "stability-ai/stable-diffusion-inpainting:95b7223104132402a9ae91cc677285bc5eb997834bd2349fa486f53910fd68b3",
+      { input }
     );
-    return res.status(200).json(output);
+    console.log(output);
+    console.log(output[0]);
+    return res.status(200).json({
+      url: output[0],
+    });
   } catch (error: any) {
     console.trace(error);
     return res.status(500).json({
