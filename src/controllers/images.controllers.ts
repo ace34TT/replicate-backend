@@ -63,16 +63,33 @@ export const turf_visualizer_handler = async (req: Request, res: Response) => {
 
     taskTracker.start();
     const data = fs.readFileSync(filepath);
-    const response = await fetch(
-      "https://api-inference.huggingface.co/models/facebook/maskformer-swin-base-coco",
-      {
-        headers: {
-          Authorization: "Bearer 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",
-        },
-        method: "POST",
-        body: data,
+    let attempts = 0;
+    const maxAttempts = 5;
+    let response;
+    while (attempts < maxAttempts) {
+      response = await fetch(
+        "https://api-inference.huggingface.co/models/facebook/maskformer-swin-base-coco",
+        {
+          headers: {
+            Authorization: "Bearer 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",
+          },
+          method: "POST",
+          body: data,
+        }
+      );
+      console.log(response.status);
+      if (response.status !== 200) {
+        await new Promise((resolve) => setTimeout(resolve, 2000));
+        attempts++;
+      } else {
+        break;
       }
-    );
+    }
+    if (!response) {
+      return res.status(500).json({
+        message: "Failed to fetch image",
+      });
+    }
     const result = await response.json();
     console.log(result);
     taskTracker.stop();
