@@ -64,7 +64,7 @@ export const turf_visualizer_handler = async (req: Request, res: Response) => {
     taskTracker.start();
     const data = fs.readFileSync(filepath);
     let attempts = 0;
-    const maxAttempts = 10;
+    const maxAttempts = 24;
     let response;
     while (attempts < maxAttempts) {
       response = await fetch(
@@ -78,7 +78,7 @@ export const turf_visualizer_handler = async (req: Request, res: Response) => {
         }
       );
       if (response.status !== 200) {
-        await new Promise((resolve) => setTimeout(resolve, 2000));
+        await new Promise((resolve) => setTimeout(resolve, 5000));
         attempts++;
       } else {
         break;
