@@ -1,5 +1,6 @@
 import express from "express";
 import {
+  ai_adonisHandler,
   ai_packager_handler,
   generateImageSegmentation,
   generateImageVariation,
@@ -22,5 +23,5 @@ router.post("/ai-packager", ai_packager_handler);
 router.post("/profile/generate", profileGeneratorHandler);
 router.post("/ai-backdrop", productVisualiserHandler);
 //
-
+router.post("/ai-adonis", ai_adonisHandler);
 export { router as ImageRoutes };

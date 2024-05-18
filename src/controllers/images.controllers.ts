@@ -294,3 +294,43 @@ export const productVisualiserHandler = async (req: Request, res: Response) => {
     });
   }
 };
+export const ai_adonisHandler = async (req: Request, res: Response) => {
+  console.log("start processing");
+  console.log(req.body);
+
+  try {
+    const data: any = {
+      model: "fast",
+      width: 1024,
+      height: 1024,
+      prompt: req.body.prompt,
+      style_image:
+        "https://firebasestorage.googleapis.com/v0/b/file-server-f5b74.appspot.com/o/ai-adonis%2FIMG_1161.jpeg?alt=media&token=2ba26878-20fb-4658-a1f7-b61c1daec623",
+      output_format: "png",
+      output_quality: 80,
+      negative_prompt: "",
+      number_of_images: 1,
+      structure_depth_strength: 1,
+      structure_denoising_strength:
+        req.body.structure_denoising_strength || 0.65,
+    };
+    if (req.body.image) {
+      data.structure_image = req.body.image;
+    }
+    const output = await replicate.run(
+      "fofr/style-transfer:f1023890703bc0a5a3a2c21b5e498833be5f6ef6e70e9daf6b9b3a4fd8309cf0",
+      {
+        input: data,
+      }
+    );
+    console.log(output);
+    console.log(output);
+    // return response
+    return res.status(200).json(output);
+  } catch (error: any) {
+    console.trace(error);
+    return res.status(500).json({
+      message: error.message,
+    });
+  }
+};
