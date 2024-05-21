@@ -305,7 +305,7 @@ export const ai_adonisHandler = async (req: Request, res: Response) => {
       height: 1024,
       prompt: req.body.prompt,
       style_image:
-        "https://firebasestorage.googleapis.com/v0/b/file-server-f5b74.appspot.com/o/ai-adonis%2FIMG_1161.jpeg?alt=media&token=2ba26878-20fb-4658-a1f7-b61c1daec623",
+        "https://firebasestorage.googleapis.com/v0/b/file-server-f5b74.appspot.com/o/ai-adonis%2FIMG_1162.jpeg?alt=media&token=88fcc065-e887-4264-a535-916390b38e3b",
       output_format: "png",
       output_quality: 80,
       negative_prompt: "",
