@@ -14,6 +14,7 @@ import { model } from "./configs/gemini.config";
 import { updateDocument } from "./services/firebase.service";
 import { fb_tufVisualizerInstance } from "./configs/fb.turfVisualizer.config";
 import { getLanguage } from "./services/gemini.service";
+import { FirebaseRoutes } from "./routes/firebase.routes";
 // import { OAuth2Client } from "./configs/youtube.config";
 const app = express();
 app.use(cors({ origin: true }));
@@ -30,6 +31,7 @@ app.use("/api", ReplicateRoutes);
 app.use("/api/video", VideoRoutes);
 app.use("/api/images", ImageRoutes);
 app.use("/api/voices", VoicesRoutes);
+app.use("/api/firebase", FirebaseRoutes);
 // !
 // app.get("/auth/google/callback", async (req, res) => {
 //   try {

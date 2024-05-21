@@ -29,3 +29,6 @@ const insertData = async (data: any) => {
   const docRef = db.collection("images").doc();
   await docRef.set(data);
 };
+export const deleteUser = async (uid: string) => {
+  await fb_tufVisualizerInstance.auth().deleteUser(uid);
+};
