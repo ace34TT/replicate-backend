@@ -7,6 +7,7 @@ import {
   lucataco_sdxl_handler,
   productVisualiserHandler,
   profileGeneratorHandler,
+  promptToImage,
   turf_visualizer_handler,
 } from "../controllers/images.controllers";
 import upload from "../middlewares/multer.middleware";
@@ -24,4 +25,5 @@ router.post("/profile/generate", profileGeneratorHandler);
 router.post("/ai-backdrop", productVisualiserHandler);
 //
 router.post("/ai-adonis", ai_adonisHandler);
+router.post("/prompt2image", promptToImage);
 export { router as ImageRoutes };

@@ -334,3 +334,33 @@ export const ai_adonisHandler = async (req: Request, res: Response) => {
     });
   }
 };
+
+export const promptToImage = async (req: Request, res: Response) => {
+  console.log(req.body);
+
+  const [prompt, width, height, numOutputs, numInferenceSteps] = [
+    req.body.prompt,
+    req.body.width,
+    req.body.height,
+    req.body.num_outputs,
+    req.body.num_inference_steps,
+  ];
+  const output = await replicate.run(
+    "bytedance/sdxl-lightning-4step:5f24084160c9089501c1b3545d9be3c27883ae2239b6f412990e82d4a6210f8f",
+    {
+      input: {
+        width: width,
+        height: height,
+        prompt: prompt,
+        scheduler: "K_EULER",
+        num_outputs: numOutputs,
+        guidance_scale: 0,
+        negative_prompt: "worst quality, low quality",
+        num_inference_steps: numInferenceSteps,
+      },
+    }
+  );
+
+  console.log(output);
+  return res.status(200).json(output);
+};
