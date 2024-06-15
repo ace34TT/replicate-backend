@@ -70,6 +70,7 @@ export const generateImageForPrintable = async (
     document.body.style.backgroundColor = "transparent";
   });
   await page.setContent(html); // Set the HTML content directly
+  folderGuard();
   await page.screenshot({
     path: path.resolve(tempDirectory, outputName),
     type: "png",
