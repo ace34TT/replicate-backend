@@ -364,3 +364,27 @@ export const promptToImage = async (req: Request, res: Response) => {
   console.log(output);
   return res.status(200).json(output);
 };
+export const clotheChangerAiHandler = async (req: Request, res: Response) => {
+  const [modelUrl, productUrl, category] = [
+    req.body.modelUrl,
+    req.body.productUrl,
+    req.body.category,
+  ];
+  const output = await replicate.run(
+    "cuuupid/idm-vton:906425dbca90663ff5427624839572cc56ea7d380343d13e2a4c4b09d3f0c30f",
+    {
+      input: {
+        crop: false,
+        steps: 30,
+        category: category,
+        force_dc: false,
+        garm_img: productUrl,
+        human_img: modelUrl,
+        mask_only: false,
+        garment_des: "cute pink top",
+      },
+    }
+  );
+  console.log(output);
+  return res.status(200).json(output);
+};

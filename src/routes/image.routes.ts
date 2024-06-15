@@ -2,6 +2,7 @@ import express from "express";
 import {
   ai_adonisHandler,
   ai_packager_handler,
+  clotheChangerAiHandler,
   generateImageSegmentation,
   generateImageVariation,
   lucataco_sdxl_handler,
@@ -26,4 +27,5 @@ router.post("/ai-backdrop", productVisualiserHandler);
 //
 router.post("/ai-adonis", ai_adonisHandler);
 router.post("/prompt2image", promptToImage);
+router.post("/ai_clothes_changer", clotheChangerAiHandler);
 export { router as ImageRoutes };

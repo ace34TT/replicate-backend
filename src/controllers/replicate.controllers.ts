@@ -367,19 +367,19 @@ export const realEsrganHandler = async (req: Request, res: Response) => {
     const imageUrl = await uploadFileToFirebase(framedFilename, "printable");
     deleteImage(framedFilename);
     console.log(imageUrl);
-    const output = await replicate.run(
-      "nightmareai/real-esrgan:42fed1c4974146d4d2414e2be2c5277c7fcf05fcc3a73abf41610695738c1d7b",
-      {
-        input: {
-          image: image,
-          scale: scale,
-        },
-      }
-    );
-    console.log(output);
+    // const output = await replicate.run(
+    //   "nightmareai/real-esrgan:42fed1c4974146d4d2414e2be2c5277c7fcf05fcc3a73abf41610695738c1d7b",
+    //   {
+    //     input: {
+    //       image: image,
+    //       scale: scale,
+    //     },
+    //   }
+    // );
+    // console.log(output);
     return res
       .status(200)
-      .json({ originalImageUrl: output, framedImageUrl: imageUrl });
+      .json({ originalImageUrl: image, framedImageUrl: imageUrl });
   } catch (error: any) {
     console.log(error.message);
     return res.status(500).json({ message: error.message });
