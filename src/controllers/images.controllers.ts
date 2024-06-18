@@ -355,7 +355,8 @@ export const promptToImage = async (req: Request, res: Response) => {
         scheduler: "K_EULER",
         num_outputs: numOutputs,
         guidance_scale: 0,
-        negative_prompt: "worst quality, low quality",
+        negative_prompt:
+          "worst quality, low quality, cropped image, out of frame, cut off, vignette, frame, border, aspect ratio distortion, off-center subject, unbalanced composition",
         num_inference_steps: numInferenceSteps,
       },
     }
