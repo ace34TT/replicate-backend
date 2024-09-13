@@ -1,8 +1,6 @@
 import fs from "fs";
 import path from "path";
-import sharp from "sharp";
 import { fb_fileServerInstance as admin } from "./../configs/fb.fileServer.config";
-
 const tempDirectory = path.resolve(__dirname, "../tmp/");
 
 export const uploadFileToFirebase = async (
@@ -11,38 +9,12 @@ export const uploadFileToFirebase = async (
   firebaseInstance = admin
 ) => {
   const bucket = firebaseInstance.storage().bucket();
-  const inputPath = path.resolve(tempDirectory, filename);
-  const outputPath = path.resolve(tempDirectory, `watermarked_${filename}`);
-
   try {
-    // Add watermark to the image
-    await sharp(inputPath)
-      .composite([
-        {
-          input: {
-            text: {
-              text: "Luxxio",
-              font: "Arial",
-              fontSize: 48,
-              rgba: true,
-            },
-          },
-          gravity: "southeast",
-        },
-      ])
-      .toFile(outputPath);
-
-    // Upload the watermarked image
-    await bucket.upload(outputPath, {
+    await bucket.upload(path.resolve(tempDirectory, filename), {
       destination: folder + "/" + filename,
     });
-
-    // Delete the temporary watermarked file
-    fs.unlinkSync(outputPath);
-
   } catch (error) {
     console.log(error);
-    throw error;
   }
 
   const fileRef = bucket.file(folder + "/" + filename);
@@ -50,7 +22,6 @@ export const uploadFileToFirebase = async (
   const publicUrl = `https://storage.googleapis.com/${bucket.name}/${fileRef.name}`;
   return publicUrl;
 };
-
 export const saveFileFromFirebase = async (
   filename: string,
   folder: string = "files",
